@@ -8,7 +8,7 @@ export const my_app = axios.create({baseURL: API_URL});
 export async function signIn(username, password) {
   try {
     const api = {
-      baseUrl:
+      baseUrl: ""
     }
     // Send request
     console.log(username, password);
