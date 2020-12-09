@@ -1,11 +1,19 @@
 import React from 'react';
-import DataGrid, { Column, Pager, Paging, FilterRow, Editing } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
 import MultipleDataReducer from '../../components/multiple-data-reducer/multiple-data-reducer';
+import TagBox from 'devextreme-react/tag-box';
 
 import './schools.scss';
+import EditChannelsComponent from '../../components/EditChannelsComponent';
 
 const schools = require('./schools.json');
+
+//get this channels
+const channels = [
+  {'id':105,'value':'Sirasa TV'},
+  {'id':106,'value':'Hiru TV'},
+]
 
 const viewButton = (row) => {
   return (
@@ -80,12 +88,25 @@ export default () => {
         />
         <Column
           caption={'TV Channels'}
-          cellRender={(row) => { return <MultipleDataReducer /> }}
-        />
+          dataField={'tv_channels'}
+          editCellComponent={EditChannelsComponent}
+        >
+           <Lookup
+              dataSource={channels}
+              valueExpr="id"
+              displayExpr="value"
+            />
+          </Column>
         <Column
           caption={'Radio Channels'}
           cellRender={(row) => { return <MultipleDataReducer /> }}
-        />
+        >
+           <Lookup
+              dataSource={channels}
+              valueExpr="id"
+              displayExpr="value"
+            />
+          </Column>
         <Column
           caption={'Students'}
           cellRender={(row) => viewButton(row)}
