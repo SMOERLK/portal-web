@@ -1,58 +1,97 @@
 import React from 'react';
-import DataGrid, { Column, Pager, Paging, FilterRow } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Pager, Paging, FilterRow, Editing } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
+import MultipleDataReducer from '../../components/multiple-data-reducer/multiple-data-reducer';
 
-import  { schools } from './data';
 import './schools.scss';
 
-const viewButton = () => {
+const schools = require('./schools.json');
+
+const viewButton = (row) => {
   return (
     <Button
-      text="View Students"
-      elementAttr={{class:"view-button"}}
+      text="View"
+      elementAttr={{ class: "view-button" }}
       stylingMode="contained"
-      onClick={() => {}}
+      onClick={() => console.log(row)}
     />
   )
 }
 
-export default () => (
-  <React.Fragment>
-    <h2 className={'content-block'}>Schools in Colombo Zone</h2>
+export default () => {
+  return (
+    <React.Fragment>
+      <h2 className={'content-block'}>Schools in Colombo Zone</h2>
 
-    <DataGrid
-      className={'dx-card wide-card'}
-      dataSource={schools}
-      showBorders={false}
-      focusedRowEnabled={true}
-      defaultFocusedRowIndex={0}
-      columnAutoWidth={true}
-      columnHidingEnabled={true}
-    >
-      <Paging defaultPageSize={10} />
-      <Pager showPageSizeSelector={true} showInfo={true} />
-      <FilterRow visible={true} />
-    
-      <Column
-        dataField={'census_id'}
-        width={150}
-        caption={'Census ID'}
-        hidingPriority={8}
-      />
-      <Column
-        dataField={'school_name'}
-        width={400}
-        caption={'School Name'}
-        hidingPriority={6}
-      />
-      <Column
-        dataField={'school_address'}
-        width={400}
-        caption={'School Address'}
-        hidingPriority={6}
-      />
+      <DataGrid
+        className={'dx-card wide-card'}
+        dataSource={schools.data}
+        showBorders={false}
+        focusedRowEnabled={true}
+        defaultFocusedRowIndex={0}
+        columnAutoWidth={true}
+        columnHidingEnabled={true}
+      >
+        <Paging defaultPageSize={10} />
+        <Pager showPageSizeSelector={true} showInfo={true} />
+        <FilterRow visible={true} />
+        <Editing
+          allowUpdating={true}
+          allowAdding={false}
+          allowDeleting={false}
+          mode="row"
+        />
 
-      <Column cellRender={viewButton} />
-    </DataGrid>
-  </React.Fragment>
-);
+        <Column
+          dataField={'id'}
+          caption={'ID'}
+        />
+        <Column
+          dataField={'code'}
+          caption={'Census ID'}
+        />
+        <Column
+          dataField={'name'}
+          caption={'Name'}
+        />
+        <Column
+          dataField={'address'}
+          caption={'Address'}
+        />
+        <Column
+          dataField={'postal_code'}
+          caption={'Postal Code'}
+          hidingPriority={3}
+        />
+        <Column
+          dataField={'contact_person'}
+          caption={'Contact Person'}
+          hidingPriority={4}
+        />
+        <Column
+          dataField={'fax'}
+          caption={'Fax'}
+          hidingPriority={1}
+        />
+        <Column
+          dataField={'email'}
+          caption={'Email'}
+          hidingPriority={2}
+        />
+        <Column
+          caption={'TV Channels'}
+          cellRender={(row) => { return <MultipleDataReducer /> }}
+        />
+        <Column
+          caption={'Radio Channels'}
+          cellRender={(row) => { return <MultipleDataReducer /> }}
+        />
+        <Column
+          caption={'Students'}
+          cellRender={(row) => viewButton(row)}
+        />
+
+      </DataGrid>
+    </React.Fragment>
+  )
+}
