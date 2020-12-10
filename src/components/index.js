@@ -5,3 +5,5 @@ export { default as ResetPasswordForm } from './reset-password-form/reset-passwo
 export { default as CreateAccountForm } from './create-account-form/create-account-form';
 export { default as ChangePasswordForm } from './change-password-form/change-password-form';
 export { default as SideNavigationMenu } from './side-navigation-menu/side-navigation-menu';
+export { default as ViewChannelsComponent } from './ViewChannelsComponent/ViewChannelsComponent';
+export { default as EditChannelsComponent } from './EditChannelsComponent/EditChannelsComponent';
