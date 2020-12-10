@@ -1,22 +1,31 @@
 import defaultUser from '../utils/default-user';
 import axios from 'axios';
 
-export const URL = "http://127.0.0.1:8080/";
-export const API_URL = "http://127.0.0.1:8080/api";
-export const my_app = axios.create({baseURL: API_URL});
+export const URL = "http://localhost:8080/";
+export const API_URL = "http://localhost:8080/api";
+export const my_app = axios.create({ baseURL: API_URL });
 
 export async function signIn(username, password) {
   try {
-    const api = {
-      baseUrl: ""
+    const requestURL = API_URL + '/login';
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',               
+      },
+      body: JSON.stringify({ username, password }),
     }
-    // Send request
-    console.log(username, password);
 
-    return {
-      isOk: true,
-      data: defaultUser
-    };
+    return fetch(requestURL, requestOptions)
+            .then(response => response.json())
+            .then(responseData => {
+              return {
+                isOk: true,
+                data: defaultUser,
+                token: responseData.token
+              };
+            })
   }
   catch {
     return {
@@ -29,7 +38,6 @@ export async function signIn(username, password) {
 export async function getUser() {
   try {
     // Send request
-
     return {
       isOk: true,
       data: defaultUser
