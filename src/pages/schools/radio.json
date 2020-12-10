@@ -1,232 +1,58 @@
 {
-  "data": [
-    {
-      "id": 101,
-      "name": "Sirasa FM"
-    },
-    {
-      "id": 102,
-      "name": "Siyatha FM"
-    },
-    {
-       "id": 103,
-      "name": "Vidula"
-    },
-    {
-	"id": 104,
-       "name": "SLBC Commercial Service (Velanda Sevaya)"
-    },
-     {
-	"id": 105,
-       "name": "Thendral FM"
-    },
-     {
-	"id": 106,
-       "name": "Radio Sri Lanka "
-    },
-     {
-	"id": 107,
-       "name": "SLBC National Service (Swadeshiya Sevaya) "
-    },
-     {
-	"id": 108,
-       "name": "SLBC National Service"
-    },
-     {
-	"id": 109,
-       "name": "SLBC Regional Service (Dabana)"
-    },
-     {
-	"id": 110,
-       "name": "SLBC Regional Service (Jaffna)"
-    },
-     {
-	"id": 111,
-       "name": "SLBC Regional Service (Kandurata Sevaya) "
-    },
-     {
-	"id": 112,
-       "name": "SLBC Regional Service (Rajarata Sevaya)"
-    },
-     {
-	"id": 113,
-       "name": "SLBC Regional Service (Ruhunu Sevaya "
-    },
-     {
-	"id": 114,
-       "name": "SLBC Regional Service (Uva)"
-    },
-     {
-	"id": 115,
-       "name": "SLBC Regional Service (Wayamba Handa) "
-    },
-    {
-	"id": 116,
-       "name": "SLBC Sports Service"
-    },
-    {
-	"id": 117,
-       "name": "Sooriyan FM"
-    },
-     {
-	"id": 118,
-       "name": "Sun FM"
-    },
-    {
-	"id": 119,
-       "name": "Rasa FM"
-    },
-    {
-	"id": 120,
-       "name": "Tamil2 FM"
-    },
-    {
-	"id": 121,
-       "name": "Tamilaruvi Radio"
-    },
-    {
-	"id": 122,
-       "name": "Thaalam FM"
-    },
-    {
-	"id": 123,
-       "name": "TNL Radio"
-    },
-    {
-	"id": 124,
-       "name": "V FM"
-    },
-    {
-	"id": 125,
-       "name": "Vasantham FM"
-    },
-    {
-	"id": 126,
-       "name": "Varnam FM"
-    },
-    {
-	"id": 127,
-       "name": "Capital Radio"
-    },
-    {
-	"id": 128,
-       "name": "Yes FM"
-    },
-    {
-	"id": 129,
-       "name": "yaathra fm"
-    },
-    {
-	"id": 130,
-       "name": "Hiru fm"
-    },
-    {
-	"id": 131,
-       "name": "Y fm"
-    },
-    {
-	"id": 132,
-       "name": "Sitha FM"
-    },
-    {
-	"id": 133,
-       "name": "Shree FM"
-    },
-    {
-	"id": 134,
-       "name": "Shakthi FM"
-    },
-    {
-	"id": 135,
-       "name": "Shaa FM"
-    },
-    {
-	"id": 136,
-       "name": "Seth FM(Negombo only)"
-    },
-    {
-	"id": 137,
-       "name": "Rhythm World"
-    },
-    {
-	"id": 138,
-       "name": "Red FM"
-    },
-    {
-	"id": 139,
-       "name": "Real Radio"
-    },
-    {
-	"id": 140,
-       "name": "Rangiri Sri Lanka"
-    },
-    {
-	"id": 141,
-       "name": "RanOne FM "
-    },
-    {
-	"id": 142,
-       "name": "Pirai FM (Muslim)"
-    },
-    {
-	"id": 143,
-       "name": "Neth FM"
-    },
-     {
-	"id": 144,
-       "name": "Lite 89.2/Lite FM"
-    },
-    {
-	"id": 145,
-       "name": "Legends FM"
-    },
-    {
-	"id": 146,
-       "name": "Lakviru"
-    },
-     {
-	"id": 147,
-       "name": "Lak FM"
-    },
-     {
-	"id": 148,
-       "name": "Kothmale FM / Kotmale Community Radio"
-    },
-    {
-	"id": 149,
-       "name": "ITN FM (formerly Lakhanda radio"
-    },
-    {
-	"id": 150,
-       "name": "GoldFM"
-    },
-    {
-	"id": 151,
-       "name": "Fox FM"
-    },
-    {
-	"id": 152,
-       "name": "FM Derana"
-    },
-    {
-	"id": 153,
-       "name": "City FM"
-    },
-    {
-	"id": 154,
-       "name": "Buddhist Radio"
-    },
-    {
-	"id": 155,
-       "name": ""
-    },
-    {
-	"id": 156,
-       "name": ""
-    },
-    {
-	"id": 157,
-       "name": ""
-    }
-  ]
+   "101": "Sirasa FM",
+   "102": "Siyatha FM",
+   "103": "Vidula",
+   "104": "SLBC Commercial Service (Velanda Sevaya)",
+   "105": "Thendral FM",
+   "106": "Radio Sri Lanka ",
+   "107": "SLBC National Service (Swadeshiya Sevaya) ",
+   "108": "SLBC National Service",
+   "109": "SLBC Regional Service (Dabana)",
+   "110": "SLBC Regional Service (Jaffna)",
+   "111": "SLBC Regional Service (Kandurata Sevaya) ",
+   "112": "SLBC Regional Service (Rajarata Sevaya)",
+   "113": "SLBC Regional Service (Ruhunu Sevaya ",
+   "114": "SLBC Regional Service (Uva)",
+   "115": "SLBC Regional Service (Wayamba Handa) ",
+   "116": "SLBC Sports Service",
+   "117": "Sooriyan FM",
+   "118": "Sun FM",
+   "119": "Rasa FM",
+   "120": "Tamil2 FM",
+   "121": "Tamilaruvi Radio",
+   "122": "Thaalam FM",
+   "123": "Rangiri TV",
+   "124": "Sarana TV",
+   "125": "TV Didula",
+   "126": "UTV Tamil",
+   "127": "Verbum TV",
+   "128": "Hiru TV",
+   "129": "yaathra fm",
+   "130": "Hiru fm",
+   "131": "Y fm",
+   "132": "Sitha FM",
+   "133": "Shree FM",
+   "134": "Shakthi FM",
+   "135": "Shaa FM",
+   "136": "Seth FM(Negombo only)",
+   "137": "Rhythm World",
+   "138": "Red FM",
+   "139": "Real Radio",
+   "140": "Rangiri Sri Lanka",
+   "141": "RanOne FM",
+   "142": "Pirai FM (Muslim)",
+   "143": "Neth FM",
+   "144": "Lite 89.2/Lite FM",
+   "145": "Legends FM",
+   "146": "Lakviru",
+   "147": "Lak FM",
+   "148": "Kothmale FM / Kotmale Community Radio",
+   "149": "ITN FM (formerly Lakhanda radio",
+   "150": "GoldFM",
+   "151": "Fox FM",
+   "152": "FM Derana",
+   "153": "City FM",
+   "154": "Buddhist Radio"
 }
+
+  
