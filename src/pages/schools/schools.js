@@ -82,7 +82,7 @@ export default () => {
           caption={'Email'}
           hidingPriority={2}
         />
-        
+
         <Column
           width={200}
           caption={'TV Channels'}
@@ -100,12 +100,12 @@ export default () => {
         <Column
           width={200}
           caption={'Radio Channels'}
-          dataField={'tv_channels'}
-          cellRender={(row) => { return <ViewChannelsComponent data={tv} channels={row.data.tv_channels}/> }}
+          dataField={'radio_channels'}
+          cellRender={(row) => { return <ViewChannelsComponent data={radio} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
         >
           <Lookup
-            dataSource={Object.entries(tv).map(data => { return { id: data[0], name: data[1] }})}
+            dataSource={Object.entries(radio).map(data => { return { id: data[0], name: data[1] }})}
             valueExpr="id"
             displayExpr="name"
           />
