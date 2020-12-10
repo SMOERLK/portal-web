@@ -5,15 +5,11 @@ import MultipleDataReducer from '../../components/multiple-data-reducer/multiple
 import TagBox from 'devextreme-react/tag-box';
 
 import './schools.scss';
-import EditChannelsComponent from '../../components/EditChannelsComponent';
+import { ViewChannelsComponent, EditChannelsComponent } from '../../components';
 
 const schools = require('./schools.json');
-
-//get this channels
-const channels = [
-  {'id':105,'value':'Sirasa TV'},
-  {'id':106,'value':'Hiru TV'},
-]
+const tv = require('./tv.json');
+const radio = require('./radio.json');
 
 const viewButton = (row) => {
   return (
@@ -86,27 +82,35 @@ export default () => {
           caption={'Email'}
           hidingPriority={2}
         />
+        
         <Column
+          width={200}
           caption={'TV Channels'}
           dataField={'tv_channels'}
+          cellRender={(row) => { return <ViewChannelsComponent data={tv} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
         >
-           <Lookup
-              dataSource={channels}
-              valueExpr="id"
-              displayExpr="value"
-            />
-          </Column>
+          <Lookup
+            dataSource={Object.entries(tv).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
+          />
+        </Column>
+
         <Column
+          width={200}
           caption={'Radio Channels'}
-          cellRender={(row) => { return <MultipleDataReducer /> }}
+          dataField={'tv_channels'}
+          cellRender={(row) => { return <ViewChannelsComponent data={tv} channels={row.data.tv_channels}/> }}
+          editCellComponent={EditChannelsComponent}
         >
-           <Lookup
-              dataSource={channels}
-              valueExpr="id"
-              displayExpr="value"
-            />
-          </Column>
+          <Lookup
+            dataSource={Object.entries(tv).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
+          />
+        </Column>
+        
         <Column
           caption={'Students'}
           cellRender={(row) => viewButton(row)}
