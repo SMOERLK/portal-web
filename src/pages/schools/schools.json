@@ -37,7 +37,7 @@
           "created_user_id": 1,
           "created": "2019-02-25T08:46:11.000000Z",
           "tv_channels": [101, 102, 112, 107, 128, 108],
-          "radio_channels": [101, 102, 152]
+          "radio_channels": [201, 202, 252]
       },
       {
           "id": 9843,
@@ -76,7 +76,7 @@
           "created_user_id": 1,
           "created": "2019-02-26T09:17:14.000000Z",
           "tv_channels": [101, 102],
-          "radio_channels": [101, 152]
+          "radio_channels": [201, 252]
       }
   ]
 }
