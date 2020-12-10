@@ -21,9 +21,8 @@ export default class EditChannelsComponent extends React.Component {
       dataSource={this.props.data.column.lookup.dataSource}
       defaultValue={this.props.data.value}
       valueExpr="id"
-      displayExpr="value"
+      displayExpr="name"
       showSelectionControls={true}
-      maxDisplayedTags={3}
       showMultiTagOnly={false}
       applyValueMode="useButtons"
       searchEnabled={true}
