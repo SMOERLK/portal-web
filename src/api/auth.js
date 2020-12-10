@@ -10,12 +10,10 @@ export async function signIn(username, password) {
     const requestURL = API_URL + '/login';
     const requestOptions = {
       method: "POST",
-      headers: new Headers({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
-        'Content-Type': 'application/json',                  
-      }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',               
+      },
       body: JSON.stringify({ username, password }),
     }
 
