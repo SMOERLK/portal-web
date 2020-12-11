@@ -1,4 +1,4 @@
-import { API } from './api';
+import API from './api';
 
 export async function signIn(username, password) {
   return (
@@ -15,6 +15,8 @@ export async function signIn(username, password) {
           }
 
           localStorage.setItem('user', JSON.stringify(user));
+          API.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+          
           return user;
        },
         () => {

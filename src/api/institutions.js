@@ -1,7 +1,7 @@
-import { API_GET } from './api';
+import API from './api';
 
 export function getInstitutions() {
   const url = '/institutions?limit=10&page=1';
 
-  return API_GET(url).then((response) => { return response.data.data })
+  return API.get(url).then((response) => { return response.data.data })
 }
