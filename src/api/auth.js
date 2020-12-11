@@ -1,4 +1,4 @@
-import API from './api';
+import { API } from './api';
 
 export async function signIn(username, password) {
   return (

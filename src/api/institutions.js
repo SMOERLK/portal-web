@@ -1,14 +1,7 @@
-import API from './api';
+import { API_GET } from './api';
 
 export function getInstitutions() {
-  const user = JSON.parse(localStorage.getItem('user'));
-  const token = 'Bearer ' + user.token;
+  const url = '/institutions?limit=10&page=1';
 
-  const request = {
-    method: 'GET',
-    url: '/institutions?limit=10&page=1',
-    headers: { 'Authorization': token }
-  }
-
-  return API(request).then((response) => { return response.data.data })
+  return API_GET(url).then((response) => { return response.data.data })
 }
