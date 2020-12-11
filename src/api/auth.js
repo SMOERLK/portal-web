@@ -15,8 +15,7 @@ export async function signIn(username, password) {
           }
 
           localStorage.setItem('user', JSON.stringify(user));
-          API.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-          
+        
           return user;
        },
         () => {
