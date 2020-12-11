@@ -1,111 +1,133 @@
-import React from 'react';
-import 'devextreme/data/odata/store';
-import DataGrid, {
-  Column,
-  Pager,
-  Paging,
-  FilterRow,
-  Lookup,
-  Editing
-} from 'devextreme-react/data-grid';
+import React, { useEffect, useState } from 'react';
+import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
+import { Button } from 'devextreme-react/button';
 
-export default () => (
-  <React.Fragment>
-    <h2 className={'content-block'}>Tasks</h2>
-    <DataGrid
-      className={'dx-card wide-card'}
-      dataSource={dataSource}
-      showBorders={false}
-      focusedRowEnabled={true}
-      defaultFocusedRowIndex={0}
-      columnAutoWidth={true}
-      columnHidingEnabled={true}
-    >
-      <Paging defaultPageSize={10} />
-      <Pager showPageSizeSelector={true} showInfo={true} />
-      <FilterRow visible={true} />
-    <Editing
-            mode="cell form"
-            allowUpdating={true}
-            allowAdding={true}
-      />
-      <Column dataField={'Task_ID'} width={90} hidingPriority={2} />
-      <Column
-        dataField={'Task_Subject'}
-        width={190}
-        caption={'Subject'}
-        hidingPriority={8}
-      />
-      <Column
-        dataField={'Task_Status'}
-        caption={'Status'}
-        hidingPriority={6}
-      />
-      <Column
-        dataField={'Task_Priority'}
-        caption={'Priority'}
-        hidingPriority={5}
+import './institutions.scss';
+import { ViewChannelsComponent, EditChannelsComponent } from '../../components';
+import { getInstitutions } from '../../api/institutions';
+
+const tv = require('./tv.json');
+const radio = require('./radio.json');
+
+export default function Students() {
+  const [institutions, setInstitutions] = useState([]);
+
+  useEffect(() => {
+    getInstitutions().then((data) => setInstitutions(data));
+  }, []);
+
+  return (
+    <React.Fragment>
+      <h2 className={'content-block'}>Institutions in Colombo Zone</h2>
+
+      <DataGrid
+        className={'dx-card wide-card'}
+        dataSource={institutions}
+        showBorders={false}
+        focusedRowEnabled={true}
+        defaultFocusedRowIndex={0}
+        columnAutoWidth={true}
+        columnHidingEnabled={true}
       >
-        <Lookup
-          dataSource={priorities}
-          valueExpr={'value'}
-          displayExpr={'name'}
+        <Paging defaultPageSize={10} />
+        <Pager showPageSizeSelector={true} showInfo={true} />
+        <FilterRow visible={true} />
+        <Editing
+          allowUpdating={true}
+          allowAdding={false}
+          allowDeleting={false}
+          mode="row"
         />
-      </Column>
-      <Column
-        dataField={'ResponsibleEmployee.Employee_Full_Name'}
-        caption={'Assigned To'}
-        allowSorting={false}
-        hidingPriority={7}
-      />
-      <Column
-        dataField={'Task_Start_Date'}
-        caption={'Start Date'}
-        dataType={'date'}
-        hidingPriority={3}
-      />
-      <Column
-        dataField={'Task_Due_Date'}
-        caption={'Due Date'}
-        dataType={'date'}
-        hidingPriority={4}
-      />
-      <Column
-        dataField={'Task_Priority'}
-        caption={'Priority'}
-        hidingPriority={1}
-      />
-      <Column
-        dataField={'Task_Completion'}
-        caption={'Completion'}
-        hidingPriority={0}
-      />   
-    </DataGrid>
-  </React.Fragment>
-);
 
-const dataSource = {
-  store: {
-    type: 'odata',
-    key: 'Task_ID',
-    url: 'https://js.devexpress.com/Demos/DevAV/odata/Tasks'
-  },
-  expand: 'ResponsibleEmployee',
-  select: [
-    'Task_ID',
-    'Task_Subject',
-    'Task_Start_Date',
-    'Task_Due_Date',
-    'Task_Status',
-    'Task_Priority',
-    'Task_Completion',
-    'ResponsibleEmployee/Employee_Full_Name'
-  ]
-};
+        <Column
+          dataField={'id'}
+          caption={'ID'}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'code'}
+          caption={'Census ID'}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'name'}
+          caption={'Name'}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'address'}
+          caption={'Address'}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'postal_code'}
+          caption={'Postal Code'}
+          hidingPriority={3}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'contact_person'}
+          caption={'Contact Person'}
+          hidingPriority={4}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'fax'}
+          caption={'Fax'}
+          hidingPriority={1}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'email'}
+          caption={'Email'}
+          hidingPriority={2}
+          allowEditing={false}
+        />
 
-const priorities = [
-  { name: 'High', value: 4 },
-  { name: 'Urgent', value: 3 },
-  { name: 'Normal', value: 2 },
-  { name: 'Low', value: 1 }
-];
+        <Column
+          width={200}
+          caption={'TV Channels'}
+          dataField={'tv_channels'}
+          cellRender={(row) => { return <ViewChannelsComponent data={tv} channels={row.data.tv_channels}/> }}
+          editCellComponent={EditChannelsComponent}
+        >
+          <Lookup
+            dataSource={Object.entries(tv).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
+          />
+        </Column>
+
+        <Column
+          width={200}
+          caption={'Radio Channels'}
+          dataField={'radio_channels'}
+          cellRender={(row) => { return <ViewChannelsComponent data={radio} channels={row.data.radio_channels}/> }}
+          editCellComponent={EditChannelsComponent}
+        >
+          <Lookup
+            dataSource={Object.entries(radio).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
+          />
+        </Column>
+        
+        <Column
+          caption={'Students'}
+          cellRender={(row) => {
+            return (
+              <Button
+                text="View"
+                elementAttr={{ class: "view-button" }}
+                stylingMode="contained"
+                onClick={() => console.log(row.data.id)}
+              />
+            )
+          }}
+          allowEditing={false}
+        />
+
+      </DataGrid>
+    </React.Fragment>
+  )
+}
