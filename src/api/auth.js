@@ -1,11 +1,4 @@
-import axios from 'axios';
-
-export const URL = "http://localhost:8080/";
-export const API_URL = "http://localhost:8080/api";
-export const API = axios.create({
-  baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' }
-})
+import API from './config';
 
 export async function signIn(username, password) {
   return (
@@ -23,12 +16,12 @@ export async function signIn(username, password) {
 
           localStorage.setItem('user', JSON.stringify(user));
           return user;
-
-       }, () => {
-        return {
-          isOk: false,
-          message: "Authentication failed"
-        };
+       },
+        () => {
+          return {
+            isOk: false,
+            message: "Authentication failed"
+          };
        })
   )
 }
