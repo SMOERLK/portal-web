@@ -26,6 +26,7 @@ function AuthProvider(props) {
   }, []);
 
   const signOut = useCallback(() => {
+    localStorage.clear();
     setUser();
   }, []);
 

@@ -1,49 +1,45 @@
-import defaultUser from '../utils/default-user';
 import axios from 'axios';
 
 export const URL = "http://localhost:8080/";
 export const API_URL = "http://localhost:8080/api";
-export const my_app = axios.create({ baseURL: API_URL });
+export const API = axios.create({
+  baseURL: API_URL,
+  headers: { 'Content-Type': 'application/json' }
+})
 
 export async function signIn(username, password) {
-  try {
-    const requestURL = API_URL + '/login';
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',               
-      },
-      body: JSON.stringify({ username, password }),
-    }
+  return (
+    API.post('/login', { username, password })
+       .then((response) => {
+          const { token, token_type, expires_in } = response.data;
 
-    return fetch(requestURL, requestOptions)
-            .then(response => response.json())
-            .then(responseData => {
-              return {
-                isOk: true,
-                data: defaultUser,
-                token: responseData.token
-              };
-            })
-  }
-  catch {
-    return {
-      isOk: false,
-      message: "Authentication failed"
-    };
-  }
+          const user = {
+            isOk: true,
+            data: { email: username, avatarUrl: '' },
+            token,
+            token_type,
+            expires_in
+          }
+
+          localStorage.setItem('user', JSON.stringify(user));
+          return user;
+
+       }, () => {
+        return {
+          isOk: false,
+          message: "Authentication failed"
+        };
+       })
+  )
 }
 
 export async function getUser() {
-  try {
-    // Send request
-    return {
-      isOk: true,
-      data: defaultUser
-    };
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  if(user && user.token) {
+    return user;
   }
-  catch {
+  else {
     return {
       isOk: false
     };
