@@ -1,35 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
-import MultipleDataReducer from '../../components/multiple-data-reducer/multiple-data-reducer';
-import TagBox from 'devextreme-react/tag-box';
 
-import './schools.scss';
+import './institutions.scss';
 import { ViewChannelsComponent, EditChannelsComponent } from '../../components';
+import { getInstitutions } from '../../api/institutions';
 
-const schools = require('./schools.json');
 const tv = require('./tv.json');
 const radio = require('./radio.json');
 
-const viewButton = (row) => {
-  return (
-    <Button
-      text="View"
-      elementAttr={{ class: "view-button" }}
-      stylingMode="contained"
-      onClick={() => console.log(row)}
-    />
-  )
-}
+export default function Institutions() {
+  const [institutions, setInstitutions] = useState([]);
 
-export default () => {
+  useEffect(() => {
+    getInstitutions().then((data) => setInstitutions(data));
+  }, []);
+
   return (
     <React.Fragment>
-      <h2 className={'content-block'}>Schools in Colombo Zone</h2>
+      <h2 className={'content-block'}>Institutions in Colombo Zone</h2>
 
       <DataGrid
         className={'dx-card wide-card'}
-        dataSource={schools.data}
+        dataSource={institutions}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
@@ -49,38 +42,46 @@ export default () => {
         <Column
           dataField={'id'}
           caption={'ID'}
+          allowEditing={false}
         />
         <Column
           dataField={'code'}
           caption={'Census ID'}
+          allowEditing={false}
         />
         <Column
           dataField={'name'}
           caption={'Name'}
+          allowEditing={false}
         />
         <Column
           dataField={'address'}
           caption={'Address'}
+          allowEditing={false}
         />
         <Column
           dataField={'postal_code'}
           caption={'Postal Code'}
           hidingPriority={3}
+          allowEditing={false}
         />
         <Column
           dataField={'contact_person'}
           caption={'Contact Person'}
           hidingPriority={4}
+          allowEditing={false}
         />
         <Column
           dataField={'fax'}
           caption={'Fax'}
           hidingPriority={1}
+          allowEditing={false}
         />
         <Column
           dataField={'email'}
           caption={'Email'}
           hidingPriority={2}
+          allowEditing={false}
         />
 
         <Column
@@ -113,7 +114,17 @@ export default () => {
         
         <Column
           caption={'Students'}
-          cellRender={(row) => viewButton(row)}
+          cellRender={(row) => {
+            return (
+              <Button
+                text="View"
+                elementAttr={{ class: "view-button" }}
+                stylingMode="contained"
+                onClick={() => console.log(row.data.id)}
+              />
+            )
+          }}
+          allowEditing={false}
         />
 
       </DataGrid>
