@@ -23,6 +23,7 @@ export default function Institutions(props) {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={institutions}
+        keyExpr={'id'}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}

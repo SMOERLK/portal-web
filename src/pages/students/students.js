@@ -25,6 +25,7 @@ export default function Students(props) {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={students}
+        keyExpr={'id'}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
