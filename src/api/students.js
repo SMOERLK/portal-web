@@ -1,7 +1,8 @@
 import API from './api';
 
-export function getStudents(institution_id) {
+export async function getStudents(institution_id) {
   const url = '/students?limit=10&institution_id=' + institution_id;
-
-  return API.get(url).then((response) => { return response.data.data })
+  const response = await API.get(url);
+  
+  return response.data.data;
 }

@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
-import { Button } from 'devextreme-react/button';
 
-import './institutions.scss';
 import { ViewChannelsComponent, EditChannelsComponent } from '../../components';
-import { getInstitutions } from '../../api/institutions';
+import { getStudents } from '../../api/students';
 
 const tv = require('./tv.json');
 const radio = require('./radio.json');
 
-export default function Students() {
-  const [institutions, setInstitutions] = useState([]);
+export default function Students(props) {
+  const { match, location } = props;
+  const { institution_id } = match.params;
+  const { institution_name } = location.state;
+
+  const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    getInstitutions().then((data) => setInstitutions(data));
+    getStudents(institution_id).then((data) => setStudents(data));
   }, []);
 
   return (
     <React.Fragment>
-      <h2 className={'content-block'}>Institutions in Colombo Zone</h2>
+      <h2 className={'content-block'}>Students of {institution_name}</h2>
 
       <DataGrid
         className={'dx-card wide-card'}
-        dataSource={institutions}
+        dataSource={students}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
@@ -40,47 +42,33 @@ export default function Students() {
         />
 
         <Column
-          dataField={'id'}
+          dataField={'student_profile.id'}
           caption={'ID'}
           allowEditing={false}
         />
         <Column
-          dataField={'code'}
-          caption={'Census ID'}
+          dataField={'student_profile.openemis_no'}
+          caption={'NSID'}
           allowEditing={false}
         />
         <Column
-          dataField={'name'}
-          caption={'Name'}
+          dataField={'student_profile.first_name'}
+          caption={'First Name'}
           allowEditing={false}
         />
         <Column
-          dataField={'address'}
+          dataField={'student_profile.last_name'}
+          caption={'Last Name'}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'education_grade_id'}
+          caption={'Grade'}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'student_profile.address'}
           caption={'Address'}
-          allowEditing={false}
-        />
-        <Column
-          dataField={'postal_code'}
-          caption={'Postal Code'}
-          hidingPriority={3}
-          allowEditing={false}
-        />
-        <Column
-          dataField={'contact_person'}
-          caption={'Contact Person'}
-          hidingPriority={4}
-          allowEditing={false}
-        />
-        <Column
-          dataField={'fax'}
-          caption={'Fax'}
-          hidingPriority={1}
-          allowEditing={false}
-        />
-        <Column
-          dataField={'email'}
-          caption={'Email'}
-          hidingPriority={2}
           allowEditing={false}
         />
 
@@ -111,21 +99,6 @@ export default function Students() {
             displayExpr="name"
           />
         </Column>
-        
-        <Column
-          caption={'Students'}
-          cellRender={(row) => {
-            return (
-              <Button
-                text="View"
-                elementAttr={{ class: "view-button" }}
-                stylingMode="contained"
-                onClick={() => console.log(row.data.id)}
-              />
-            )
-          }}
-          allowEditing={false}
-        />
 
       </DataGrid>
     </React.Fragment>

@@ -9,7 +9,7 @@ import { getInstitutions } from '../../api/institutions';
 const tv = require('./tv.json');
 const radio = require('./radio.json');
 
-export default function Institutions() {
+export default function Institutions(props) {
   const [institutions, setInstitutions] = useState([]);
 
   useEffect(() => {
@@ -120,7 +120,10 @@ export default function Institutions() {
                 text="View"
                 elementAttr={{ class: "view-button" }}
                 stylingMode="contained"
-                onClick={() => console.log(row.data.id)}
+                onClick={() => props.history.push({
+                  pathname: '/students?institution_id=' + row.data.id,
+                  state: { institution_name: row.data.name }
+                })}
               />
             )
           }}
