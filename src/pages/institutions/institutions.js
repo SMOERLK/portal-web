@@ -3,11 +3,9 @@ import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'dev
 import { Button } from 'devextreme-react/button';
 
 import './institutions.scss';
-import { ViewChannelsComponent, EditChannelsComponent } from '../../components';
 import { getInstitutions } from '../../api/institutions';
-
-const tv = require('./tv.json');
-const radio = require('./radio.json');
+import { ViewChannelsComponent, EditChannelsComponent } from '../../components';
+import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Institutions(props) {
   const [institutions, setInstitutions] = useState([]);
@@ -89,13 +87,15 @@ export default function Institutions(props) {
           width={200}
           caption={'TV Channels'}
           dataField={'tv_channels'}
-          cellRender={(row) => { return <ViewChannelsComponent data={tv} channels={row.data.tv_channels}/> }}
+          calculateCellValue={(rowData) => { return rowData.tv_channels.map((channel) => channel.channel_id) }}
+          filterOperations={['contains']}
+          cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
         >
           <Lookup
-            dataSource={Object.entries(tv).map(data => { return { id: data[0], name: data[1] }})}
-            valueExpr="id"
-            displayExpr="name"
+            dataSource={Object.entries(TV_CHANNELS).map(data => { return { channel_id: data[0], option: data[1] }})}
+            valueExpr="channel_id"
+            displayExpr="option"
           />
         </Column>
 
@@ -103,13 +103,15 @@ export default function Institutions(props) {
           width={200}
           caption={'Radio Channels'}
           dataField={'radio_channels'}
-          cellRender={(row) => { return <ViewChannelsComponent data={radio} channels={row.data.radio_channels}/> }}
+          calculateCellValue={(rowData) => { return rowData.tv_channels.map((channel) => channel.channel_id) }}
+          filterOperations={['contains']}
+          cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
         >
           <Lookup
-            dataSource={Object.entries(radio).map(data => { return { id: data[0], name: data[1] }})}
-            valueExpr="id"
-            displayExpr="name"
+            dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { channel_id: data[0], option: data[1] }})}
+            valueExpr="channel_id"
+            displayExpr="option"
           />
         </Column>
         
