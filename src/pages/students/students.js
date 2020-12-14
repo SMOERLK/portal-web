@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
 
 import { getStudents } from '../../api/students';
-import { ViewBooleanComponent, EditBooleanComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
+import { ViewBooleanComponent, EditBooleanComponent, ViewOptionComponent, EditOptionComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Students(props) {
@@ -13,7 +13,8 @@ export default function Students(props) {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    getStudents(institution_id).then((data) => setStudents(data));
+    setStudents(require('./data.json').data)
+    //getStudents(institution_id).then((data) => setStudents(data));
   }, []);
 
   return (
@@ -64,12 +65,42 @@ export default function Students(props) {
           dataField={'education_grade_id'}
           caption={'Grade'}
           allowEditing={false}
+          hidingPriority={2}
         />
         <Column
           dataField={'student_profile.address'}
           caption={'Address'}
           allowEditing={false}
+          hidingPriority={1}
         />
+
+        <Column
+          caption={'Type of Device'}
+          dataField={'additional_data.type_of_device'}
+          calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.type_of_device }}
+          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && TV_CHANNELS[row.data.additional_data.type_of_device]} /> }}
+          editCellComponent={EditOptionComponent}
+        >
+          <Lookup
+            dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], option: data[1] }})}
+            valueExpr="id"
+            displayExpr="option"
+          />
+        </Column>
+
+        <Column
+          caption={'Type of Device at Home'}
+          dataField={'additional_data.type_of_device_at_home'}
+          calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.type_of_device_at_home }}
+          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && TV_CHANNELS[row.data.additional_data.type_of_device_at_home]} /> }}
+          editCellComponent={EditOptionComponent}
+        >
+          <Lookup
+            dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], option: data[1] }})}
+            valueExpr="id"
+            displayExpr="option"
+          />
+        </Column>
 
         <Column
           caption={'Internet at Home'}
@@ -79,6 +110,20 @@ export default function Students(props) {
           editCellComponent={EditBooleanComponent}
         >
           <Lookup dataSource={['Yes', 'No']} />
+        </Column>
+
+        <Column
+          caption={'Internet Device'}
+          dataField={'additional_data.internet_device'}
+          calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.internet_device }}
+          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && TV_CHANNELS[row.data.additional_data.internet_device]} /> }}
+          editCellComponent={EditOptionComponent}
+        >
+          <Lookup
+            dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], option: data[1] }})}
+            valueExpr="id"
+            displayExpr="option"
+          />
         </Column>
 
         <Column
@@ -109,6 +154,7 @@ export default function Students(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
+          hidingPriority={3}
         >
           <Lookup
             dataSource={Object.entries(TV_CHANNELS).map(data => { return { channel_id: data[0], option: data[1] }})}
@@ -125,6 +171,7 @@ export default function Students(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
+          hidingPriority={4}
         >
           <Lookup
             dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { channel_id: data[0], option: data[1] }})}

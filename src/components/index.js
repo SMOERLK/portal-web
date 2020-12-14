@@ -9,3 +9,5 @@ export { default as ViewChannelsComponent } from './ViewChannelsComponent/ViewCh
 export { default as EditChannelsComponent } from './EditChannelsComponent/EditChannelsComponent';
 export { default as ViewBooleanComponent } from './ViewBooleanComponent/ViewBooleanComponent';
 export { default as EditBooleanComponent } from './EditBooleanComponent/EditBooleanComponent';
+export { default as ViewOptionComponent } from './ViewOptionComponent/ViewOptionComponent';
+export { default as EditOptionComponent } from './EditOptionComponent/EditOptionComponent';
