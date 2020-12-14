@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
+import notify from 'devextreme/ui/notify';
 
-import { getStudents } from '../../api/students';
+import { getStudents, setStudent } from '../../api/students';
 import { ViewBooleanComponent, EditBooleanComponent, ViewOptionComponent, EditOptionComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
@@ -17,7 +18,17 @@ export default function Students(props) {
   }, []);
 
   const handleOnSaved = async (data) => {
-
+    setStudent(data).then((response) => {
+      if(response.status === 200) {
+        notify("Updated successfully", 'success', 2000);
+      }
+      else if(response.status === 401) {
+        notify("Unauthorized attempt", 'error', 2000);
+      }
+      else {
+        notify("Update failed", 'error', 2000);
+      }
+    })
   }
 
   return (
@@ -33,7 +44,7 @@ export default function Students(props) {
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
-        onSaved={(data) => handleOnSaved(data)}
+        onSaved={(data) => handleOnSaved(data.changes[0].data)}
       >
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />
@@ -107,6 +118,7 @@ export default function Students(props) {
         </Column>
 
         <Column
+          width={150}
           caption={'Internet at Home'}
           dataField={'additional_data.internet_at_home'}
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.internet_at_home ? 'Yes' : 'No' : null}}
@@ -131,6 +143,18 @@ export default function Students(props) {
         </Column>
 
         <Column
+          width={150}
+          caption={'Electricity at Home'}
+          dataField={'additional_data.electricity_at_home'}
+          calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.electricity_at_home ? 'Yes' : 'No' : null}}
+          cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.electricity_at_home}/> }}
+          editCellComponent={EditBooleanComponent}
+        >
+          <Lookup dataSource={['Yes', 'No']} />
+        </Column>
+
+        <Column
+          width={150}
           caption={'TV at Home'}
           dataField={'additional_data.tv_at_home'}
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.tv_at_home ? 'Yes' : 'No' : null}}
@@ -141,6 +165,7 @@ export default function Students(props) {
         </Column>
 
         <Column
+          width={150}
           caption={'Satellite TV at Home'}
           dataField={'additional_data.satellite_tv_at_home'}
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.satellite_tv_at_home ? 'Yes' : 'No' : null}}
