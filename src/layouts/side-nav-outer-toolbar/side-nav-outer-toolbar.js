@@ -13,9 +13,7 @@ export default function ({ title, children }) {
   const history = useHistory();
   const { isXSmall, isLarge } = useScreenSize();
   const [patchCssClass, onMenuReady] = useMenuPatch();
-  const [menuStatus, setMenuStatus] = useState(
-    isLarge ? MenuStatus.Opened : MenuStatus.Closed
-  );
+  const [menuStatus, setMenuStatus] = useState(MenuStatus.Closed);
 
   const toggleMenu = useCallback(({ event }) => {
     setMenuStatus(
