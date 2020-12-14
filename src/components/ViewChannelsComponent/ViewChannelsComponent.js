@@ -13,7 +13,7 @@ export default function ViewChannelsComponent (props) {
     let view = [];
 
     channels.forEach(channel => {
-      view.push(<div className={'channel'}>{data[channel.channel_id]}</div>)
+      view.push(<div key={channel.channel_id} className={'channel'}>{data[channel.channel_id]}</div>)
     });
     
     setView(view);
