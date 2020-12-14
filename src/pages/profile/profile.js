@@ -37,7 +37,6 @@ export default () => {
             readOnly={true}
             id={'form'}
             defaultFormData={profile}
-            onFieldDataChanged={e => e.dataField === 'Notes' && setNotes(e.value)}
             labelLocation={'top'}
             colCountByScreen={colCountByScreen}
           />
