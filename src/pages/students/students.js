@@ -5,7 +5,7 @@ import notify from 'devextreme/ui/notify';
 import './students.scss';
 import { getStudents, setStudent } from '../../api/students';
 import { ViewBooleanComponent, EditBooleanComponent, ViewOptionComponent, EditOptionComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
-import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
+import { TV_CHANNELS, RADIO_CHANNELS, DEVICES, CONNECTION_TYPES, GRADES } from '../../options';
 
 export default function Students(props) {
   const { match, location } = props;
@@ -80,6 +80,7 @@ export default function Students(props) {
         <Column
           dataField={'education_grade_id'}
           caption={'Grade'}
+          calculateCellValue={(rowData) => { return GRADES[rowData.education_grade_id] }}
           allowEditing={false}
           hidingPriority={2}
         />
@@ -94,13 +95,13 @@ export default function Students(props) {
           caption={'Type of Device'}
           dataField={'additional_data.type_of_device'}
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.type_of_device }}
-          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && TV_CHANNELS[row.data.additional_data.type_of_device]} /> }}
+          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && DEVICES[row.data.additional_data.type_of_device]} /> }}
           editCellComponent={EditOptionComponent}
         >
           <Lookup
-            dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], option: data[1] }})}
+            dataSource={Object.entries(DEVICES).map(data => { return { id: data[0], name: data[1] }})}
             valueExpr="id"
-            displayExpr="option"
+            displayExpr="name"
           />
         </Column>
 
@@ -108,13 +109,13 @@ export default function Students(props) {
           caption={'Type of Device at Home'}
           dataField={'additional_data.type_of_device_at_home'}
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.type_of_device_at_home }}
-          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && TV_CHANNELS[row.data.additional_data.type_of_device_at_home]} /> }}
+          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && DEVICES[row.data.additional_data.type_of_device_at_home]} /> }}
           editCellComponent={EditOptionComponent}
         >
           <Lookup
-            dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], option: data[1] }})}
+            dataSource={Object.entries(DEVICES).map(data => { return { id: data[0], name: data[1] }})}
             valueExpr="id"
-            displayExpr="option"
+            displayExpr="name"
           />
         </Column>
 
@@ -133,13 +134,27 @@ export default function Students(props) {
           caption={'Internet Device'}
           dataField={'additional_data.internet_device'}
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.internet_device }}
-          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && TV_CHANNELS[row.data.additional_data.internet_device]} /> }}
+          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && DEVICES[row.data.additional_data.internet_device]} /> }}
           editCellComponent={EditOptionComponent}
         >
           <Lookup
-            dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], option: data[1] }})}
+            dataSource={Object.entries(DEVICES).map(data => { return { id: data[0], name: data[1] }})}
             valueExpr="id"
-            displayExpr="option"
+            displayExpr="name"
+          />
+        </Column>
+
+        <Column
+          caption={'Connection Type'}
+          dataField={'additional_data.connection_type'}
+          calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.connection_type }}
+          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && CONNECTION_TYPES[row.data.additional_data.connection_type]} /> }}
+          editCellComponent={EditOptionComponent}
+        >
+          <Lookup
+            dataSource={Object.entries(CONNECTION_TYPES).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
           />
         </Column>
 

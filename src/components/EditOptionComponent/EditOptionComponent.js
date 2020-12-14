@@ -12,7 +12,7 @@ export default function EditOptionComponent (props) {
     <SelectBox
       items={props.data.column.lookup.dataSource}
       valueExpr="id"
-      displayExpr="option"
+      displayExpr="name"
       placeholder="Select"
       value={props.value}
       onValueChange={onValueChange}
