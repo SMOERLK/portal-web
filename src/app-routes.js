@@ -1,10 +1,14 @@
 import { withNavigationWatcher } from './contexts/navigation';
-import { HomePage, SchoolsPage, ProfilePage } from './pages';
+import { HomePage, InstitutionsPage, StudentsPage, ProfilePage } from './pages';
 
 const routes = [
   {
-    path: '/schools',
-    component: SchoolsPage
+    path: '/institutions',
+    component: InstitutionsPage
+  },
+  {
+    path: '/students?institution_id=:institution_id',
+    component: StudentsPage
   },
   {
     path: '/profile',

@@ -1,0 +1,24 @@
+.bool-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.bool {
+  margin: 5px;
+  padding: 5px 15px 5px 15px;
+  width: fit-content;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: #d9d9d9;
+  color: #404040;
+}
+
+.yes {
+  background-color: #009933;
+  color: #ffffff;
+}
+
+.no {
+  background-color: #ff0000;
+  color: #ffffff;
+}

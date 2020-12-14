@@ -13,8 +13,8 @@ export const navigation = [
         path: '/profile'
       },
       {
-        text: 'Schools',
-        path: '/schools'
+        text: 'Institutions',
+        path: '/institutions'
       }
     ]
   }
