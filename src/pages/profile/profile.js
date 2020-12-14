@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './profile.scss';
 import Form from 'devextreme-react/form';
 
@@ -6,8 +6,30 @@ export default () => {
   const [notes, setNotes] = useState(
     'Sandra is a CPA and has been our controller since 2008. She loves to interact with staff so if you`ve not met her, be certain to say hi.\r\n\r\nSandra has 2 daughters both of whom are accomplished gymnasts.'
   );
+  const [profile, setProfile] = useState({});
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const data = user.data;
+
+    const profile = {
+      OpenemisID: data.openemis_no,
+      FirstName: data.first_name,
+      MiddleName: data.middle_name,
+      Address: data.address,
+      BirthDate: data.date_of_birth,
+      LastLogin: data.last_login
+    }
+
+    setProfile(profile);
+    setData(data);
+  }, [])
+
+
+
   const employee = {
-    ID: 7,
+    OpenemisID: 7,
     FirstName: 'Sandra',
     LastName: 'Johnson',
     Prefix: 'Mrs.',
@@ -23,27 +45,22 @@ export default () => {
     <React.Fragment>
       <h2 className={'content-block'}>Profile</h2>
 
-      <div className={'content-block dx-card responsive-paddings'}>
-        <div className={'form-avatar'}>
-          <img
-            alt={''}
-            src={`https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/${
-              employee.Picture
-            }`}
+      {Object.keys(profile).length && <div>
+        <div className={'content-block dx-card responsive-paddings top-container'}>
+          <img className={'avatar'} src={data.avatarUrl} />
+        </div>
+
+        <div className={'content-block dx-card responsive-paddings'}>
+          <Form
+            readOnly={true}
+            id={'form'}
+            defaultFormData={profile}
+            onFieldDataChanged={e => e.dataField === 'Notes' && setNotes(e.value)}
+            labelLocation={'top'}
+            colCountByScreen={colCountByScreen}
           />
         </div>
-        <span>{notes}</span>
-      </div>
-
-      <div className={'content-block dx-card responsive-paddings'}>
-        <Form
-          id={'form'}
-          defaultFormData={employee}
-          onFieldDataChanged={e => e.dataField === 'Notes' && setNotes(e.value)}
-          labelLocation={'top'}
-          colCountByScreen={colCountByScreen}
-        />
-      </div>
+      </div>}
     </React.Fragment>
   );
 };
