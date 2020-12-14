@@ -42,7 +42,7 @@ export default function Students(props) {
         />
 
         <Column
-          dataField={'additional_data.student_id'}
+          dataField={'student_id'}
           caption={'ID'}
           allowEditing={false}
         />
