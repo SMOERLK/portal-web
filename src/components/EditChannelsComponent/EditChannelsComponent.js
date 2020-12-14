@@ -8,10 +8,6 @@ export default class EditChannelsComponent extends React.Component {
     this.onSelectionChanged = this.onSelectionChanged.bind(this);
   }
 
-  componentDidMount() {
-    console.log(this.props.data)
-  }
-
   onValueChanged(e) {
     this.props.data.setValue(e.value);
   }
