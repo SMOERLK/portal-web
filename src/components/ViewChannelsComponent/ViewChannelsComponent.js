@@ -19,6 +19,10 @@ export default function ViewChannelsComponent (props) {
     setView(view);
   }, []);
 
+  if(!channels.length) {
+    return <div className={'not-available'}>N/A</div>
+  }
+
   return (
     <div>
       <div>{showList ?

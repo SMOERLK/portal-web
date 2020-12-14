@@ -11,6 +11,6 @@ export default function ViewBooleanComponent (props) {
     )
   }
   else {
-    return <div></div>
+    return <div className={'not-available'}>N/A</div>
   }
 }
