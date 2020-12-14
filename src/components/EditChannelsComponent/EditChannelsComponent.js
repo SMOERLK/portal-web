@@ -8,8 +8,13 @@ export default class EditChannelsComponent extends React.Component {
     this.onSelectionChanged = this.onSelectionChanged.bind(this);
   }
 
+  componentDidMount() {
+    console.log(this.props.data)
+  }
+
   onValueChanged(e) {
     this.props.data.setValue(e.value);
+    console.log(e)
   }
 
   onSelectionChanged() {
@@ -20,8 +25,8 @@ export default class EditChannelsComponent extends React.Component {
     return <TagBox
       dataSource={this.props.data.column.lookup.dataSource}
       defaultValue={this.props.data.value}
-      valueExpr="channel_id"
-      displayExpr="option"
+      valueExpr="id"
+      displayExpr="name"
       showSelectionControls={true}
       showMultiTagOnly={false}
       applyValueMode="useButtons"

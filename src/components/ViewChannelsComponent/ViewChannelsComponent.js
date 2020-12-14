@@ -12,8 +12,8 @@ export default function ViewChannelsComponent (props) {
   useEffect(() => {
     let view = [];
 
-    channels.forEach(channel => {
-      view.push(<div key={channel.channel_id} className={'channel'}>{data[channel.channel_id]}</div>)
+    channels.forEach(channel_id => {
+      view.push(<div key={channel_id} className={'channel'}>{data[channel_id]}</div>)
     });
     
     setView(view);

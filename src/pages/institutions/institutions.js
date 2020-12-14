@@ -87,15 +87,14 @@ export default function Institutions(props) {
           width={200}
           caption={'TV Channels'}
           dataField={'tv_channels'}
-          calculateCellValue={(rowData) => { return rowData.tv_channels.map((channel) => channel.channel_id) }}
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
         >
           <Lookup
-            dataSource={Object.entries(TV_CHANNELS).map(data => { return { channel_id: data[0], option: data[1] }})}
-            valueExpr="channel_id"
-            displayExpr="option"
+            dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
           />
         </Column>
 
@@ -103,15 +102,14 @@ export default function Institutions(props) {
           width={200}
           caption={'Radio Channels'}
           dataField={'radio_channels'}
-          calculateCellValue={(rowData) => { return rowData.tv_channels.map((channel) => channel.channel_id) }}
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
         >
           <Lookup
-            dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { channel_id: data[0], option: data[1] }})}
-            valueExpr="channel_id"
-            displayExpr="option"
+            dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
           />
         </Column>
         

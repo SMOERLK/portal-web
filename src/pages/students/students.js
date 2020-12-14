@@ -13,8 +13,7 @@ export default function Students(props) {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    setStudents(require('./data.json').data)
-    //getStudents(institution_id).then((data) => setStudents(data));
+    getStudents(institution_id).then((data) => setStudents(data));
   }, []);
 
   return (
@@ -30,6 +29,7 @@ export default function Students(props) {
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
+        onSaved={(data) => console.log(data)}
       >
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />
@@ -150,16 +150,15 @@ export default function Students(props) {
           width={200}
           caption={'TV Channels'}
           dataField={'tv_channels'}
-          calculateCellValue={(rowData) => { return rowData.tv_channels.map((channel) => channel.channel_id) }}
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
           hidingPriority={3}
         >
           <Lookup
-            dataSource={Object.entries(TV_CHANNELS).map(data => { return { channel_id: data[0], option: data[1] }})}
-            valueExpr="channel_id"
-            displayExpr="option"
+            dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
           />
         </Column>
 
@@ -167,16 +166,15 @@ export default function Students(props) {
           width={200}
           caption={'Radio Channels'}
           dataField={'radio_channels'}
-          calculateCellValue={(rowData) => { return rowData.radio_channels.map((channel) => channel.channel_id) }}
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
           hidingPriority={4}
         >
           <Lookup
-            dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { channel_id: data[0], option: data[1] }})}
-            valueExpr="channel_id"
-            displayExpr="option"
+            dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
+            valueExpr="id"
+            displayExpr="name"
           />
         </Column>
 
