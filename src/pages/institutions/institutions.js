@@ -3,8 +3,8 @@ import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'dev
 import { Button } from 'devextreme-react/button';
 
 import './institutions.scss';
-import { getInstitutions } from '../../api/institutions';
-import { ViewChannelsComponent, EditChannelsComponent } from '../../components';
+import { getInstitutions, setInstitution } from '../../api/institutions';
+import { ViewBooleanComponent, EditBooleanComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Institutions(props) {
@@ -13,6 +13,17 @@ export default function Institutions(props) {
   useEffect(() => {
     getInstitutions().then((data) => setInstitutions(data));
   }, []);
+
+  const handleOnSaved = async (data) => {
+    setInstitution(data).then((response) => {
+      if(response.status === 200) {
+        console.log(response.data)
+      }
+      else {
+        console.log("ERRORRRRRRR!!!!!!!!")
+      }
+    })
+  }
 
   return (
     <React.Fragment>
@@ -27,6 +38,7 @@ export default function Institutions(props) {
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
+        onSaved={(data) => handleOnSaved(data.changes[0].data)}
       >
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />
@@ -82,6 +94,36 @@ export default function Institutions(props) {
           hidingPriority={2}
           allowEditing={false}
         />
+
+        <Column
+          caption={'Internet'}
+          dataField={'additional_data.has_internet_connection'}
+          calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_internet_connection ? 'Yes' : 'No' : null}}
+          cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.has_internet_connection}/> }}
+          editCellComponent={EditBooleanComponent}
+        >
+          <Lookup dataSource={['Yes', 'No']} />
+        </Column>
+
+        <Column
+          caption={'Electricity'}
+          dataField={'additional_data.has_electricity'}
+          calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_electricity ? 'Yes' : 'No' : null}}
+          cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.has_electricity}/> }}
+          editCellComponent={EditBooleanComponent}
+        >
+          <Lookup dataSource={['Yes', 'No']} />
+        </Column>
+
+        <Column
+          caption={'Telephone'}
+          dataField={'additional_data.has_telephone'}
+          calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_telephone ? 'Yes' : 'No' : null}}
+          cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.has_telephone}/> }}
+          editCellComponent={EditBooleanComponent}
+        >
+          <Lookup dataSource={['Yes', 'No']} />
+        </Column>
 
         <Column
           width={200}

@@ -16,6 +16,10 @@ export default function Students(props) {
     getStudents(institution_id).then((data) => setStudents(data));
   }, []);
 
+  const handleOnSaved = async (data) => {
+
+  }
+
   return (
     <React.Fragment>
       <h2 className={'content-block'}>Students of {institution_name}</h2>
@@ -29,7 +33,7 @@ export default function Students(props) {
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
-        onSaved={(data) => console.log(data)}
+        onSaved={(data) => handleOnSaved(data)}
       >
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />

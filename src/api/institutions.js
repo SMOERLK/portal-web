@@ -6,3 +6,10 @@ export async function getInstitutions() {
   
   return response.data.data;
 }
+
+export async function setInstitution(data) {
+  const url = '/institutions/' + data.id;
+  const response = await API.post(url, data);
+
+  return response;
+}
