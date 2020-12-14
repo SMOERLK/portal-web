@@ -7,7 +7,7 @@ export default function ViewBooleanComponent (props) {
 
   if(value == 0 || value == 1) {
     return (
-      value ? <div className={'bool yes'}>Yes</div> : <div className={'bool no'}>No</div>
+      value ? <div className={'bool-view yes'}>Yes</div> : <div className={'bool-view no'}>No</div>
     )
   }
   else {
