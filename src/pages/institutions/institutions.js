@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
+import notify from 'devextreme/ui/notify';
 
 import './institutions.scss';
 import { getInstitutions, setInstitution } from '../../api/institutions';
@@ -17,10 +18,13 @@ export default function Institutions(props) {
   const handleOnSaved = async (data) => {
     setInstitution(data).then((response) => {
       if(response.status === 200) {
-        console.log(response.data)
+        notify("Updated successfully", 'success', 2000);
+      }
+      else if(response.status === 401) {
+        notify("Unauthorized attempt", 'error', 2000);
       }
       else {
-        console.log("ERRORRRRRRR!!!!!!!!")
+        notify("Update failed", 'error', 2000);
       }
     })
   }
@@ -96,6 +100,7 @@ export default function Institutions(props) {
         />
 
         <Column
+          width={150}
           caption={'Internet'}
           dataField={'additional_data.has_internet_connection'}
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_internet_connection ? 'Yes' : 'No' : null}}
@@ -106,6 +111,7 @@ export default function Institutions(props) {
         </Column>
 
         <Column
+          width={150}
           caption={'Electricity'}
           dataField={'additional_data.has_electricity'}
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_electricity ? 'Yes' : 'No' : null}}
@@ -116,6 +122,7 @@ export default function Institutions(props) {
         </Column>
 
         <Column
+          width={150}
           caption={'Telephone'}
           dataField={'additional_data.has_telephone'}
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_telephone ? 'Yes' : 'No' : null}}
