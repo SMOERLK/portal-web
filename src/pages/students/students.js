@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
 import notify from 'devextreme/ui/notify';
 
+import './students.scss';
 import { getStudents, setStudent } from '../../api/students';
 import { ViewBooleanComponent, EditBooleanComponent, ViewOptionComponent, EditOptionComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
