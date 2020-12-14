@@ -7,3 +7,5 @@ export { default as ChangePasswordForm } from './change-password-form/change-pas
 export { default as SideNavigationMenu } from './side-navigation-menu/side-navigation-menu';
 export { default as ViewChannelsComponent } from './ViewChannelsComponent/ViewChannelsComponent';
 export { default as EditChannelsComponent } from './EditChannelsComponent/EditChannelsComponent';
+export { default as ViewBooleanComponent } from './ViewBooleanComponent/ViewBooleanComponent';
+export { default as EditBooleanComponent } from './EditBooleanComponent/EditBooleanComponent';

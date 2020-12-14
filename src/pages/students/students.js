@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
 
 import { getStudents } from '../../api/students';
-import { ViewChannelsComponent, EditChannelsComponent } from '../../components';
+import { ViewBooleanComponent, EditBooleanComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Students(props) {
@@ -70,6 +70,36 @@ export default function Students(props) {
           caption={'Address'}
           allowEditing={false}
         />
+
+        <Column
+          caption={'Internet at Home'}
+          dataField={'additional_data.internet_at_home'}
+          calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.internet_at_home ? 'Yes' : 'No' : null}}
+          cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.internet_at_home}/> }}
+          editCellComponent={EditBooleanComponent}
+        >
+          <Lookup dataSource={['Yes', 'No']} />
+        </Column>
+
+        <Column
+          caption={'TV at Home'}
+          dataField={'additional_data.tv_at_home'}
+          calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.tv_at_home ? 'Yes' : 'No' : null}}
+          cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.tv_at_home}/> }}
+          editCellComponent={EditBooleanComponent}
+        >
+          <Lookup dataSource={['Yes', 'No']} />
+        </Column>
+
+        <Column
+          caption={'Satellite TV at Home'}
+          dataField={'additional_data.satellite_tv_at_home'}
+          calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.satellite_tv_at_home ? 'Yes' : 'No' : null}}
+          cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.satellite_tv_at_home}/> }}
+          editCellComponent={EditBooleanComponent}
+        >
+          <Lookup dataSource={['Yes', 'No']} />
+        </Column>
 
         <Column
           width={200}
