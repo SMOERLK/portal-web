@@ -3,17 +3,17 @@ import React, { useEffect, useState, useCallback } from 'react';
 import './EditBooleanComponent.scss'
 
 export default function EditBooleanComponent (props) {
-  const { value } = props;
+  const defaultValue = props.data.value;
 
   const [classNameYes, setClassNameYes] = useState('bool');
   const [classNameNo, setClassNameNo] = useState('bool');
 
   useEffect(() => {
-    if(value == 0) {
+    if(defaultValue == 'No') {
       setClassNameYes('bool');
       setClassNameNo('bool no');
     }
-    else if(value == 1) {
+    else if(defaultValue == 'Yes') {
       setClassNameYes('bool yes');
       setClassNameNo('bool');
     }
