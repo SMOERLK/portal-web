@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
-import CustomStore from 'devextreme/data/custom_store';
 import { Button } from 'devextreme-react/button';
 import notify from 'devextreme/ui/notify';
 
@@ -10,34 +9,15 @@ import { ViewBooleanComponent, EditBooleanComponent, ViewChannelsComponent, Edit
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Institutions(props) {
-  const store = new CustomStore({
-    key: 'id',
-    load: async function() {
-      return getInstitutions()
-        .then((institutions) => { return institutions })
-        .catch(() => notify("Internal server error. Failed to fetch data.", 'error', 3000))
-    },
-    update: async function(key, values) {
-      var request = values;
-      request.id = key;
+  const [institutions, setInstitutions] = useState([]);
 
-      if(!values.tv_channels)    { request.tv_channels = [] }
-      if(!values.radio_channels) { request.radio_channels = [] }
+  useEffect(() => {
+    setInstitutions(require('./institutions.json').data)
+    //getInstitutions().then((data) => setInstitutions(data));
+  }, []);
 
-      return setInstitution(request)
-        .then((response) => {
-          switch(response.status) {
-            case 200: notify("Updated successfully.", 'success', 3000); break;
-            case 401: notify("Unauthorized attempt.", 'error', 3000); break;
-            default : notify("Update failed.", 'error', 3000);
-          }
-        })
-        .catch(() => notify("Internal server error. Could not perform update.", 'error', 3000))
-    }
-  })
-
-  const validateAdditionalData = (additional_data) => {
-    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
+  const validateData = (data) => {
+    const { has_internet_connection, has_electricity, has_telephone } = data.additional_data;
 
     let requiredColumns = [];
 
@@ -65,8 +45,31 @@ export default function Institutions(props) {
     if(changes === undefined) {
       notify("No changes made. Nothing to update.", 'info', 3000);
     }
-    else if(changes.data && !validateAdditionalData(changes.data.additional_data)) {
+    else if(!validateData(changes.data)) {
       e.cancel = true;
+    }
+    else {
+      e.cancel = true;
+      console.log(changes.data)
+      const response = await setInstitution(changes.data)
+      // setInstitution(changes.data)
+      //   .then((response) => {
+      //     if(response.status === 200) {
+      //       notify("Updated successfully.", 'success', 3000);
+      //     }
+      //     else if(response.status === 401) {
+      //       e.cancel = true;
+      //       notify("Unauthorized attempt.", 'error', 3000);
+      //     }
+      //     else {
+      //       e.cancel = true;
+      //       notify("Update failed.", 'error', 3000);
+      //     }
+      //   })
+      //   .catch(() => {
+      //     e.cancel = true;
+      //     notify("Internal server error. Could not perform update.", 'error', 3000);
+      //   })
     }
   }
 
@@ -76,12 +79,14 @@ export default function Institutions(props) {
 
       <DataGrid
         className={'dx-card wide-card'}
-        dataSource={store}
+        dataSource={institutions}
+        keyExpr={'id'}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
+        // onRowUpdating={handleOnRowUpdating}
         onSaving={handleOnSaving}
         onEditCanceled={() => notify("Edit cancelled.", 'info', 2000)}
       >
@@ -180,7 +185,6 @@ export default function Institutions(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
-          hidingPriority={6}
         >
           <Lookup
             dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
@@ -196,7 +200,6 @@ export default function Institutions(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
-          hidingPriority={5}
         >
           <Lookup
             dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
