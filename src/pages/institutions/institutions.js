@@ -18,13 +18,13 @@ export default function Institutions(props) {
         .catch(() => notify("Internal server error. Failed to fetch data.", 'error', 3000))
     },
     update: async function(key, values) {
-      var request = values;
-      request.id = key;
+      var requestData = values;
+      requestData.id = key;
 
-      if(!values.tv_channels)    { request.tv_channels = [] }
-      if(!values.radio_channels) { request.radio_channels = [] }
+      if(!values.tv_channels)    { requestData.tv_channels = [] }
+      if(!values.radio_channels) { requestData.radio_channels = [] }
 
-      return setInstitution(request)
+      return setInstitution(requestData)
         .then((response) => {
           switch(response.status) {
             case 200: notify("Updated successfully.", 'success', 3000); break;
