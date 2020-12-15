@@ -14,7 +14,7 @@ export default function Students(props) {
   const { institution_name } = location.state;
 
   const store = new CustomStore({
-    key: 'id',
+    key: 'student_id',
     load: async function() {
       return getStudents(institution_id)
         .then((students) => { return students })
@@ -22,7 +22,7 @@ export default function Students(props) {
     },
     update: async function(key, values) {
       var requestData = values;
-      requestData.id = key;
+      requestData.student_id = key;
 
       if(!values.tv_channels)    { requestData.tv_channels = [] }
       if(!values.radio_channels) { requestData.radio_channels = [] }
@@ -80,7 +80,6 @@ export default function Students(props) {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={store}
-        keyExpr={'id'}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
