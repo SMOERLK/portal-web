@@ -122,7 +122,7 @@ export default function Students(props) {
         <Column
           dataField={'education_grade_id'}
           caption={'Grade'}
-          calculateCellValue={(rowData) => { return rowData && rowData.education_grade_id && GRADES[rowData.education_grade_id] }}
+          calculateCellValue={(rowData) => { return rowData.education_grade_id && GRADES[rowData.education_grade_id] }}
           allowEditing={false}
           hidingPriority={2}
         />
