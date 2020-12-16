@@ -1,13 +1,12 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import appInfo from './app-info';
-import routes from './app-routes';
 import { SideNavOuterToolbar as SideNavBarLayout } from './layouts';
 import { Footer } from './components';
+import routes from './app-routes';
 
 export default function() {
   return (
-    <SideNavBarLayout title={appInfo.title}>
+    <SideNavBarLayout title={'State Ministry of Education Reforms - Sri Lanka'}>
       <Switch>
         {routes.map(({ path, component }) => (
           <Route
@@ -20,10 +19,7 @@ export default function() {
         <Redirect to={'/home'} />
       </Switch>
       <Footer>
-        Copyright © 2011-{new Date().getFullYear()} {appInfo.title} Inc.
-        <br />
-        All trademarks or registered trademarks are property of their
-        respective owners.
+        Copyright © {new Date().getFullYear()} State Ministry of Education Reforms, Sri Lanka.
       </Footer>
     </SideNavBarLayout>
   );

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
+import CustomStore from 'devextreme/data/custom_store';
 import { Button } from 'devextreme-react/button';
 import notify from 'devextreme/ui/notify';
 
@@ -9,24 +10,64 @@ import { ViewBooleanComponent, EditBooleanComponent, ViewChannelsComponent, Edit
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Institutions(props) {
-  const [institutions, setInstitutions] = useState([]);
+  const store = new CustomStore({
+    key: 'id',
+    load: async function() {
+      return getInstitutions()
+        .then((institutions) => { return institutions })
+        .catch(() => notify("Internal server error. Failed to fetch data.", 'error', 3000))
+    },
+    update: async function(key, values) {
+      var requestData = values;
+      requestData.id = key;
 
-  useEffect(() => {
-    getInstitutions().then((data) => setInstitutions(data));
-  }, []);
+      if(!values.tv_channels)    { requestData.tv_channels = [] }
+      if(!values.radio_channels) { requestData.radio_channels = [] }
 
-  const handleOnSaved = async (data) => {
-    setInstitution(data).then((response) => {
-      if(response.status === 200) {
-        notify("Updated successfully", 'success', 2000);
-      }
-      else if(response.status === 401) {
-        notify("Unauthorized attempt", 'error', 2000);
-      }
-      else {
-        notify("Update failed", 'error', 2000);
-      }
-    })
+      return setInstitution(requestData)
+        .then((response) => {
+          switch(response.status) {
+            case 200: notify("Updated successfully.", 'success', 3000); break;
+            case 401: notify("Unauthorized attempt.", 'error', 3000); break;
+            default : notify("Update failed.", 'error', 3000);
+          }
+        })
+        .catch(() => notify("Internal server error. Could not perform update.", 'error', 3000))
+    }
+  })
+
+  const validateAdditionalData = (additional_data) => {
+    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
+
+    let requiredColumns = [];
+
+    if(has_internet_connection === undefined) { requiredColumns.push(' Internet') }
+    if(has_electricity === undefined)         { requiredColumns.push(' Electricity') }
+    if(has_telephone === undefined)           { requiredColumns.push(' Telephone') }
+
+    const requiredColumnsLength = requiredColumns.length;
+
+    if(requiredColumnsLength) {
+      const an = requiredColumnsLength == 1 ? "an " : "";
+      const s = requiredColumnsLength > 1 ? "s" : "";
+      const notification = "Please select " + an + "option" + s + " for" + requiredColumns.toString() + " column" + s + ".";
+      
+      notify(notification, 'error', 3000);
+      return false;
+    }
+
+    return true;
+  }
+
+  const handleOnSaving = async (e) => {
+    const changes = e.changes[0];
+
+    if(changes === undefined) {
+      notify("No changes made. Nothing to update.", 'info', 3000);
+    }
+    else if(changes.data && !validateAdditionalData(changes.data.additional_data)) {
+      e.cancel = true;
+    }
   }
 
   return (
@@ -35,14 +76,14 @@ export default function Institutions(props) {
 
       <DataGrid
         className={'dx-card wide-card'}
-        dataSource={institutions}
-        keyExpr={'id'}
+        dataSource={store}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
-        onSaved={(data) => handleOnSaved(data.changes[0].data)}
+        onSaving={handleOnSaving}
+        onEditCanceled={() => notify("Edit cancelled.", 'info', 2000)}
       >
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />
@@ -139,6 +180,7 @@ export default function Institutions(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
+          hidingPriority={6}
         >
           <Lookup
             dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
@@ -154,6 +196,7 @@ export default function Institutions(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
+          hidingPriority={5}
         >
           <Lookup
             dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
