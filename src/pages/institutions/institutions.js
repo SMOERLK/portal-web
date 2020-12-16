@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
 import CustomStore from 'devextreme/data/custom_store';
 import { Button } from 'devextreme-react/button';
@@ -10,6 +10,8 @@ import { ViewBooleanComponent, EditBooleanComponent, ViewChannelsComponent, Edit
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Institutions(props) {
+  const [editedRowOldValues, setEditedRowOldValues] = useState({});
+
   const store = new CustomStore({
     key: 'id',
     load: async function() {
@@ -21,8 +23,19 @@ export default function Institutions(props) {
       var requestData = values;
       requestData.id = key;
 
-      if(!values.tv_channels)    { requestData.tv_channels = [] }
-      if(!values.radio_channels) { requestData.radio_channels = [] }
+      if(!values.hasOwnProperty('additional_data')) {
+        requestData.additional_data = editedRowOldValues.additional_data;
+      }
+      else {
+        if(!values.additional_data.hasOwnProperty('has_internet_connection')) { requestData.additional_data.has_internet_connection = editedRowOldValues.additional_data.has_internet_connection }
+        if(!values.additional_data.hasOwnProperty('has_electricity'))         { requestData.additional_data.has_electricity = editedRowOldValues.additional_data.has_electricity }
+        if(!values.additional_data.hasOwnProperty('has_telephone'))           { requestData.additional_data.has_telephone = editedRowOldValues.additional_data.has_telephone }
+      }
+
+      if(!values.tv_channels)    { requestData.tv_channels = editedRowOldValues.tv_channels || [] }
+      if(!values.radio_channels) { requestData.radio_channels = editedRowOldValues.radio_channels || [] }
+      
+      setEditedRowOldValues({});
 
       return setInstitution(requestData)
         .then((response) => {
@@ -36,14 +49,15 @@ export default function Institutions(props) {
     }
   })
 
-  const validateAdditionalData = (additional_data) => {
-    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
+  const validateAdditionalData = (additionalDataNew, additionalDataOld) => {
+    const additional_data_new = additionalDataNew || {};
+    const additional_data_old = additionalDataOld || {};
 
     let requiredColumns = [];
 
-    if(has_internet_connection === undefined) { requiredColumns.push(' Internet') }
-    if(has_electricity === undefined)         { requiredColumns.push(' Electricity') }
-    if(has_telephone === undefined)           { requiredColumns.push(' Telephone') }
+    if(!additional_data_new.hasOwnProperty('has_internet_connection') && !additional_data_old.hasOwnProperty('has_internet_connection')) { requiredColumns.push(' Internet') }
+    if(!additional_data_new.hasOwnProperty('has_electricity')         && !additional_data_old.hasOwnProperty('has_electricity'))         { requiredColumns.push(' Electricity') }
+    if(!additional_data_new.hasOwnProperty('has_telephone')           && !additional_data_old.hasOwnProperty('has_telephone'))           { requiredColumns.push(' Telephone') }
 
     const requiredColumnsLength = requiredColumns.length;
 
@@ -65,8 +79,18 @@ export default function Institutions(props) {
     if(changes === undefined) {
       notify("No changes made. Nothing to update.", 'info', 3000);
     }
-    else if(changes.data && !validateAdditionalData(changes.data.additional_data)) {
-      e.cancel = true;
+    else{
+      const dataSource = e.component.getDataSource();
+      const editedRowOldValues = dataSource._items.filter((object) => object.id === changes.key)[0];
+
+      setEditedRowOldValues(editedRowOldValues);
+
+      const additional_data_new = changes.data.additional_data;
+      const additional_data_old = editedRowOldValues.additional_data;
+
+      if(!validateAdditionalData(additional_data_new, additional_data_old)) {
+        e.cancel = true;
+      }
     }
   }
 
