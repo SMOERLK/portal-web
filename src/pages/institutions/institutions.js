@@ -43,7 +43,6 @@ export default function Institutions(props) {
         columnAutoWidth={true}
         columnHidingEnabled={true}
         onSaved={(data) => handleOnSaved(data.changes[0].data)}
-        repaintChangesOnly={true}
       >
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />
