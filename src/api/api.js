@@ -1,7 +1,7 @@
 import axios from 'axios';
+import config from '../../config.json'
 
-export const URL = "https://smoerapi.sisdemo.opensource.lk/";
-export const API_URL = "https://smoerapi.sisdemo.opensource.lk/api";
+export const API_URL = config.api_url;
 
 const API = axios.create({
   baseURL: API_URL,
