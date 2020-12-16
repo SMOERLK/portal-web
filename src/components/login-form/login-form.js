@@ -1,13 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import Form, {
-  Item,
-  Label,
-  ButtonItem,
-  ButtonOptions,
-  RequiredRule,
-  EmailRule
-} from 'devextreme-react/form';
+import { useHistory } from 'react-router-dom';
+import Form, { Item, Label, ButtonItem, ButtonOptions, RequiredRule } from 'devextreme-react/form';
 import LoadIndicator from 'devextreme-react/load-indicator';
 import notify from 'devextreme/ui/notify';
 import { useAuth } from '../../contexts/auth';
@@ -15,7 +8,6 @@ import { useAuth } from '../../contexts/auth';
 import './login-form.scss';
 
 export default function () {
-  const history = useHistory();
   const { signIn } = useAuth();
   const [loading, setLoading] = useState(false);
   const formData = useRef({});
@@ -31,10 +23,6 @@ export default function () {
       notify(result.message, 'error', 2000);
     }
   }, [signIn]);
-
-  const onCreateAccountClick = useCallback(() => {
-    history.push('/create-account');
-  }, [history]);
 
   return (
     <form className={'login-form'} onSubmit={onSubmit}>
