@@ -91,7 +91,7 @@ export default function Students(props) {
       const additional_data_new = changes.data.additional_data;
       const additional_data_old = editedRowOldValues.additional_data;
 
-      if(changes.data && !validateAdditionalData(additional_data_new, additional_data_old)) {
+      if(!validateAdditionalData(additional_data_new, additional_data_old)) {
         e.cancel = true;
       }
     }
