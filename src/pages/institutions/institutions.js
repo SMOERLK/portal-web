@@ -33,29 +33,6 @@ export default function Institutions(props) {
     }
   })
 
-  const validateAdditionalData = (additional_data) => {
-    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
-
-    let requiredColumns = [];
-
-    if(has_internet_connection === null) { requiredColumns.push(' Internet') }
-    if(has_electricity === null)         { requiredColumns.push(' Electricity') }
-    if(has_telephone === null)           { requiredColumns.push(' Telephone') }
-
-    const requiredColumnsLength = requiredColumns.length;
-
-    if(requiredColumnsLength) {
-      const an = requiredColumnsLength == 1 ? "an " : "";
-      const s = requiredColumnsLength > 1 ? "s" : "";
-      const notification = "Please select " + an + "option" + s + " for" + requiredColumns.toString() + " column" + s + ".";
-      
-      notify(notification, 'error', 3000);
-      return false;
-    }
-
-    return true;
-  }
-
   const handleOnSaving = async (e) => {
     const changes = e.changes[0];
 
@@ -95,6 +72,29 @@ export default function Institutions(props) {
     if(newValues.hasOwnProperty(key))     { return newValues[key] }
     if(currentValues.hasOwnProperty(key)) { return currentValues[key] }
     return null;
+  }
+
+  const validateAdditionalData = (additional_data) => {
+    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
+
+    let requiredColumns = [];
+
+    if(has_internet_connection === null) { requiredColumns.push(' Internet') }
+    if(has_electricity === null)         { requiredColumns.push(' Electricity') }
+    if(has_telephone === null)           { requiredColumns.push(' Telephone') }
+
+    const requiredColumnsLength = requiredColumns.length;
+
+    if(requiredColumnsLength) {
+      const an = requiredColumnsLength == 1 ? "an " : "";
+      const s = requiredColumnsLength > 1 ? "s" : "";
+      const notification = "Please select " + an + "option" + s + " for" + requiredColumns.toString() + " column" + s + ".";
+      
+      notify(notification, 'error', 3000);
+      return false;
+    }
+
+    return true;
   }
 
   return (
