@@ -10,7 +10,7 @@ import { ViewBooleanComponent, EditBooleanComponent, ViewChannelsComponent, Edit
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Institutions(props) {
-  const [editedRowOldValues, setEditedRowOldValues] = useState({});
+  const [editedRowUpdatedValues, setEditedRowUpdatedValues] = useState(null);
 
   const store = new CustomStore({
     key: 'id',
@@ -19,45 +19,28 @@ export default function Institutions(props) {
         .then((institutions) => { return institutions })
         .catch(() => notify("Internal server error. Failed to fetch data.", 'error', 3000))
     },
-    update: async function(key, values) {
-      var requestData = values;
-      requestData.id = key;
-
-      if(!values.hasOwnProperty('additional_data')) {
-        requestData.additional_data = editedRowOldValues.additional_data;
-      }
-      else {
-        if(!values.additional_data.hasOwnProperty('has_internet_connection')) { requestData.additional_data.has_internet_connection = editedRowOldValues.additional_data.has_internet_connection }
-        if(!values.additional_data.hasOwnProperty('has_electricity'))         { requestData.additional_data.has_electricity = editedRowOldValues.additional_data.has_electricity }
-        if(!values.additional_data.hasOwnProperty('has_telephone'))           { requestData.additional_data.has_telephone = editedRowOldValues.additional_data.has_telephone }
-      }
-
-      if(!values.tv_channels)    { requestData.tv_channels = editedRowOldValues.tv_channels || [] }
-      if(!values.radio_channels) { requestData.radio_channels = editedRowOldValues.radio_channels || [] }
-      
-      setEditedRowOldValues({});
-
-      return setInstitution(requestData)
+    update: async function() {
+      return setInstitution(editedRowUpdatedValues)
         .then((response) => {
           switch(response.status) {
             case 200: notify("Updated successfully.", 'success', 3000); break;
             case 401: notify("Unauthorized attempt.", 'error', 3000); break;
             default : notify("Update failed.", 'error', 3000);
           }
+          setEditedRowUpdatedValues(null);
         })
         .catch(() => notify("Internal server error. Could not perform update.", 'error', 3000))
     }
   })
 
-  const validateAdditionalData = (additionalDataNew, additionalDataOld) => {
-    const additional_data_new = additionalDataNew || {};
-    const additional_data_old = additionalDataOld || {};
+  const validateAdditionalData = (additional_data) => {
+    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
 
     let requiredColumns = [];
 
-    if(!additional_data_new.hasOwnProperty('has_internet_connection') && !additional_data_old.hasOwnProperty('has_internet_connection')) { requiredColumns.push(' Internet') }
-    if(!additional_data_new.hasOwnProperty('has_electricity')         && !additional_data_old.hasOwnProperty('has_electricity'))         { requiredColumns.push(' Electricity') }
-    if(!additional_data_new.hasOwnProperty('has_telephone')           && !additional_data_old.hasOwnProperty('has_telephone'))           { requiredColumns.push(' Telephone') }
+    if(has_internet_connection === null) { requiredColumns.push(' Internet') }
+    if(has_electricity === null)         { requiredColumns.push(' Electricity') }
+    if(has_telephone === null)           { requiredColumns.push(' Telephone') }
 
     const requiredColumnsLength = requiredColumns.length;
 
@@ -81,17 +64,37 @@ export default function Institutions(props) {
     }
     else{
       const dataSource = e.component.getDataSource();
-      const editedRowOldValues = dataSource._items.filter((object) => object.id === changes.key)[0];
+      const rowData = dataSource._items.filter((object) => object.id === changes.key)[0];
+      const updatedValues = getUpdatedValues(rowData, changes.data);
 
-      setEditedRowOldValues(editedRowOldValues);
-
-      const additional_data_new = changes.data.additional_data;
-      const additional_data_old = editedRowOldValues.additional_data;
-
-      if(!validateAdditionalData(additional_data_new, additional_data_old)) {
+      if(validateAdditionalData(updatedValues.additional_data)) {
+        setEditedRowUpdatedValues(updatedValues);
+      }
+      else {
         e.cancel = true;
       }
     }
+  }
+
+  const getUpdatedValues = (rowData, changes) => {
+    const updatedValues = {
+      id: rowData.id,
+      additional_data: {
+        has_internet_connection: _updateValue(changes.additional_data, rowData.additional_data, 'has_internet_connection'),
+        has_electricity        : _updateValue(changes.additional_data, rowData.additional_data, 'has_electricity'),
+        has_telephone          : _updateValue(changes.additional_data, rowData.additional_data, 'has_telephone'),
+      },
+      tv_channels   : _updateValue(changes, rowData, 'tv_channels') || [],
+      radio_channels: _updateValue(changes, rowData, 'radio_channels') || [],
+    }
+
+    return updatedValues;
+  }
+
+  const _updateValue = (newValues, currentValues, key) => {
+    if(newValues.hasOwnProperty(key))     { return newValues[key] }
+    if(currentValues.hasOwnProperty(key)) { return currentValues[key] }
+    return null;
   }
 
   return (
