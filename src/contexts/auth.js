@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
 import { getUser, signIn as sendSignInRequest } from '../api/auth';
+import { getProfile } from '../api/profile';
 
 function AuthProvider(props) {
   const [user, setUser] = useState();
@@ -18,8 +19,21 @@ function AuthProvider(props) {
 
   const signIn = useCallback(async (username, password) => {
     const result = await sendSignInRequest(username, password);
+    const defaultAvatarUrl = 'https://freesvg.org/img/abstract-user-flat-4.png';
+    
     if (result.isOk) {
-      setUser(result.data);
+      getProfile().then((profile) => {
+        let user = result;
+        let data = profile.user;
+
+        if(!profile.user.avatarUrl) {
+          data.avatarUrl = defaultAvatarUrl;
+        }
+
+        user.data = data;
+        setUser(data);
+        localStorage.setItem('user', JSON.stringify(user));
+      })
     }
 
     return result;

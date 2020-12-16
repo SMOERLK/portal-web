@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
+import CustomStore from 'devextreme/data/custom_store';
 import notify from 'devextreme/ui/notify';
 
 import './students.scss';
@@ -12,24 +13,64 @@ export default function Students(props) {
   const { institution_id } = match.params;
   const { institution_name } = location.state;
 
-  const [students, setStudents] = useState([]);
+  const store = new CustomStore({
+    key: 'student_id',
+    load: async function() {
+      return getStudents(institution_id)
+        .then((students) => { return students })
+        .catch(() => notify("Internal server error. Failed to fetch data.", 'error', 3000))
+    },
+    update: async function(key, values) {
+      var requestData = values;
+      requestData.student_id = key;
 
-  useEffect(() => {
-    getStudents(institution_id).then((data) => setStudents(data));
-  }, []);
+      if(!values.tv_channels)    { requestData.tv_channels = [] }
+      if(!values.radio_channels) { requestData.radio_channels = [] }
 
-  const handleOnSaved = async (data) => {
-    setStudent(data).then((response) => {
-      if(response.status === 200) {
-        notify("Updated successfully", 'success', 2000);
-      }
-      else if(response.status === 401) {
-        notify("Unauthorized attempt", 'error', 2000);
-      }
-      else {
-        notify("Update failed", 'error', 2000);
-      }
-    })
+      return setStudent(requestData)
+        .then((response) => {
+          switch(response.status) {
+            case 200: notify("Updated successfully.", 'success', 3000); break;
+            case 401: notify("Unauthorized attempt.", 'error', 3000); break;
+            default : notify("Update failed.", 'error', 3000);
+          }
+        })
+        .catch(() => notify("Internal server error. Could not perform update.", 'error', 3000))
+    }
+  })
+
+  const validateAdditionalData = (additional_data) => {
+    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
+
+    let requiredColumns = [];
+
+    if(has_internet_connection === undefined) { requiredColumns.push(' Internet') }
+    if(has_electricity === undefined)         { requiredColumns.push(' Electricity') }
+    if(has_telephone === undefined)           { requiredColumns.push(' Telephone') }
+
+    const requiredColumnsLength = requiredColumns.length;
+
+    if(requiredColumnsLength) {
+      const an = requiredColumnsLength == 1 ? "an " : "";
+      const s = requiredColumnsLength > 1 ? "s" : "";
+      const notification = "Please select " + an + "option" + s + " for" + requiredColumns.toString() + " column" + s + ".";
+      
+      notify(notification, 'error', 3000);
+      return false;
+    }
+
+    return true;
+  }
+
+  const handleOnSaving = async (e) => {
+    const changes = e.changes[0];
+
+    if(changes === undefined) {
+      notify("No changes made. Nothing to update.", 'info', 3000);
+    }
+    else if(changes.data && !validateAdditionalData(changes.data.additional_data)) {
+      e.cancel = true;
+    }
   }
 
   return (
@@ -38,14 +79,14 @@ export default function Students(props) {
 
       <DataGrid
         className={'dx-card wide-card'}
-        dataSource={students}
-        keyExpr={'id'}
+        dataSource={store}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
-        onSaved={(data) => handleOnSaved(data.changes[0].data)}
+        onSaving={handleOnSaving}
+        onEditCanceled={() => notify("Edit cancelled.", 'info', 2000)}
       >
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />
@@ -80,7 +121,7 @@ export default function Students(props) {
         <Column
           dataField={'education_grade_id'}
           caption={'Grade'}
-          calculateCellValue={(rowData) => { return GRADES[rowData.education_grade_id] }}
+          calculateCellValue={(rowData) => { return rowData.education_grade_id && GRADES[rowData.education_grade_id] }}
           allowEditing={false}
           hidingPriority={2}
         />

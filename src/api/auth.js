@@ -8,7 +8,7 @@ export async function signIn(username, password) {
 
           const user = {
             isOk: true,
-            data: { email: username, avatarUrl: '' },
+            data: { email: '', avatarUrl: '' },
             token,
             token_type,
             expires_in
