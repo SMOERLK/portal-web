@@ -33,7 +33,7 @@ export default function Institutions(props) {
     }
   })
 
-  const handleOnSaving = async (e) => {
+  const handleOnSaving = (e) => {
     const changes = e.changes[0];
 
     if(changes === undefined) {
