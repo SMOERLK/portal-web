@@ -6,7 +6,7 @@ import notify from 'devextreme/ui/notify';
 import './students.scss';
 import { getStudents, setStudent } from '../../api/students';
 import { ViewBooleanComponent, EditBooleanComponent, ViewOptionComponent, EditOptionComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
-import { TV_CHANNELS, RADIO_CHANNELS, DEVICES, CONNECTION_TYPES, GRADES } from '../../options';
+import { TV_CHANNELS, RADIO_CHANNELS, DEVICES, INTERNET_DEVICES, GRADES } from '../../options';
 
 export default function Students(props) {
   const { match, location } = props;
@@ -59,6 +59,7 @@ export default function Students(props) {
   const getUpdatedValues = (rowData, changes) => {
     const updatedValues = {
       id: rowData.student_id,
+      institution_id : rowData.institution_id,
       additional_data: _updateAdditionalData(changes, rowData),
       tv_channels    : _updateValue(changes, rowData, 'tv_channels') || [],
       radio_channels : _updateValue(changes, rowData, 'radio_channels') || [],
@@ -73,7 +74,6 @@ export default function Students(props) {
       'type_of_device_at_home',
       'internet_at_home',
       'internet_device',
-      'connection_type',
       'electricity_at_home',
       'tv_at_home',
       'satellite_tv_at_home'
@@ -89,8 +89,8 @@ export default function Students(props) {
   }
 
   const _updateValue = (changes, rowData, key) => {
-    if(changes.hasOwnProperty(key)) { return changes[key] }
-    if(rowData.hasOwnProperty(key)) { return rowData[key] }
+    if(changes && changes.hasOwnProperty(key)) { return changes[key] }
+    if(rowData && rowData.hasOwnProperty(key)) { return rowData[key] }
     return null;
   }
 
@@ -100,7 +100,6 @@ export default function Students(props) {
       type_of_device_at_home,
       internet_at_home,
       internet_device,
-      connection_type,
       electricity_at_home,
       tv_at_home,
       satellite_tv_at_home
@@ -112,7 +111,6 @@ export default function Students(props) {
     if(type_of_device_at_home === null) { requiredColumns.push(' Type of Device at Home') }
     if(internet_at_home === null)       { requiredColumns.push(' Internet at Home') }
     if(internet_device === null)        { requiredColumns.push(' Internet Device') }
-    if(connection_type === null)        { requiredColumns.push(' Connection Type') }
     if(electricity_at_home === null)    { requiredColumns.push(' Electricity at Home') }
     if(tv_at_home === null)             { requiredColumns.push(' TV at Home') }
     if(satellite_tv_at_home === null)   { requiredColumns.push(' Satellite TV at Home') }
@@ -233,25 +231,11 @@ export default function Students(props) {
           caption={'Internet Device'}
           dataField={'additional_data.internet_device'}
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.internet_device }}
-          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && DEVICES[row.data.additional_data.internet_device]} /> }}
+          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && INTERNET_DEVICES[row.data.additional_data.internet_device]} /> }}
           editCellComponent={EditOptionComponent}
         >
           <Lookup
-            dataSource={Object.entries(DEVICES).map(data => { return { id: data[0], name: data[1] }})}
-            valueExpr="id"
-            displayExpr="name"
-          />
-        </Column>
-
-        <Column
-          caption={'Connection Type'}
-          dataField={'additional_data.connection_type'}
-          calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.connection_type }}
-          cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && CONNECTION_TYPES[row.data.additional_data.connection_type]} /> }}
-          editCellComponent={EditOptionComponent}
-        >
-          <Lookup
-            dataSource={Object.entries(CONNECTION_TYPES).map(data => { return { id: data[0], name: data[1] }})}
+            dataSource={Object.entries(INTERNET_DEVICES).map(data => { return { id: data[0], name: data[1] }})}
             valueExpr="id"
             displayExpr="name"
           />
