@@ -81,8 +81,8 @@ export default function Institutions(props) {
   }
 
   const _updateValue = (changes, rowData, key) => {
-    if(changes.hasOwnProperty(key)) { return changes[key] }
-    if(rowData.hasOwnProperty(key)) { return rowData[key] }
+    if(changes && changes.hasOwnProperty(key)) { return changes[key] }
+    if(rowData && rowData.hasOwnProperty(key)) { return rowData[key] }
     return null;
   }
 
