@@ -12,6 +12,7 @@ export default function Students(props) {
   const { match, location } = props;
   const { institution_id } = match.params;
   const { institution_name } = location.state;
+  const { classes } = location.state;
 
   const [editedRowUpdatedValues, setEditedRowUpdatedValues] = useState(null);
 
@@ -175,12 +176,16 @@ export default function Students(props) {
           allowEditing={false}
         />
         <Column
-          dataField={'education_grade_id'}
-          caption={'Grade'}
-          calculateCellValue={(rowData) => { return rowData.education_grade_id && GRADES[rowData.education_grade_id] }}
-          allowEditing={false}
-          hidingPriority={2}
-        />
+          caption={'Class'}
+          dataField={'class.institution_class_id'}
+          calculateCellValue={(rowData) => { return rowData.class.institution_class_id}}
+        >
+          <Lookup
+            dataSource={(classes).map(data => {return data} )}
+            valueExpr="id"
+            displayExpr="name"
+          />
+        </Column>
         <Column
           dataField={'student_profile.address'}
           caption={'Address'}
