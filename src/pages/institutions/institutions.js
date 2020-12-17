@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DataGrid, { Column, Pager, Paging, FilterRow, Editing, Lookup } from 'devextreme-react/data-grid';
 import CustomStore from 'devextreme/data/custom_store';
 import { Button } from 'devextreme-react/button';
@@ -10,6 +10,8 @@ import { ViewBooleanComponent, EditBooleanComponent, ViewChannelsComponent, Edit
 import { TV_CHANNELS, RADIO_CHANNELS } from '../../options';
 
 export default function Institutions(props) {
+  const [editedRowUpdatedValues, setEditedRowUpdatedValues] = useState(null);
+
   const store = new CustomStore({
     key: 'id',
     load: async function() {
@@ -17,33 +19,81 @@ export default function Institutions(props) {
         .then((institutions) => { return institutions })
         .catch(() => notify("Internal server error. Failed to fetch data.", 'error', 3000))
     },
-    update: async function(key, values) {
-      var requestData = values;
-      requestData.id = key;
-
-      if(!values.tv_channels)    { requestData.tv_channels = [] }
-      if(!values.radio_channels) { requestData.radio_channels = [] }
-
-      return setInstitution(requestData)
+    update: async function() {
+      return setInstitution(editedRowUpdatedValues)
         .then((response) => {
           switch(response.status) {
             case 200: notify("Updated successfully.", 'success', 3000); break;
             case 401: notify("Unauthorized attempt.", 'error', 3000); break;
             default : notify("Update failed.", 'error', 3000);
           }
+          setEditedRowUpdatedValues(null);
         })
         .catch(() => notify("Internal server error. Could not perform update.", 'error', 3000))
     }
   })
+
+  const handleOnSaving = (e) => {
+    const changes = e.changes[0];
+
+    if(changes === undefined) {
+      notify("No changes made. Nothing to update.", 'info', 3000);
+    }
+    else{
+      const dataSource = e.component.getDataSource();
+      const rowData = dataSource._items.filter((object) => object.id === changes.key)[0];
+      const updatedValues = getUpdatedValues(changes.data, rowData);
+
+      if(validateAdditionalData(updatedValues.additional_data)) {
+        setEditedRowUpdatedValues(updatedValues);
+      }
+      else {
+        e.cancel = true;
+      }
+    }
+  }
+
+  const getUpdatedValues = (changes, rowData) => {
+    const updatedValues = {
+      id: rowData.id,
+      additional_data: _updateAdditionalData(changes, rowData),
+      tv_channels    : _updateValue(changes, rowData, 'tv_channels') || [],
+      radio_channels : _updateValue(changes, rowData, 'radio_channels') || [],
+    }
+
+    return updatedValues;
+  }
+
+  const _updateAdditionalData = (changes, rowData) => {
+    const additional_data = [
+      'has_internet_connection',
+      'has_electricity',
+      'has_telephone'
+    ]
+
+    var additionalData = {};
+
+    additional_data.forEach((key) => {
+      additionalData[key] = _updateValue(changes.additional_data, rowData.additional_data, key)
+    })
+
+    return additionalData;
+  }
+
+  const _updateValue = (changes, rowData, key) => {
+    if(changes && changes.hasOwnProperty(key)) { return changes[key] }
+    if(rowData && rowData.hasOwnProperty(key)) { return rowData[key] }
+    return null;
+  }
 
   const validateAdditionalData = (additional_data) => {
     const { has_internet_connection, has_electricity, has_telephone } = additional_data;
 
     let requiredColumns = [];
 
-    if(has_internet_connection === undefined) { requiredColumns.push(' Internet') }
-    if(has_electricity === undefined)         { requiredColumns.push(' Electricity') }
-    if(has_telephone === undefined)           { requiredColumns.push(' Telephone') }
+    if(has_internet_connection === null) { requiredColumns.push(' Internet') }
+    if(has_electricity === null)         { requiredColumns.push(' Electricity') }
+    if(has_telephone === null)           { requiredColumns.push(' Telephone') }
 
     const requiredColumnsLength = requiredColumns.length;
 
@@ -57,17 +107,6 @@ export default function Institutions(props) {
     }
 
     return true;
-  }
-
-  const handleOnSaving = async (e) => {
-    const changes = e.changes[0];
-
-    if(changes === undefined) {
-      notify("No changes made. Nothing to update.", 'info', 3000);
-    }
-    else if(changes.data && !validateAdditionalData(changes.data.additional_data)) {
-      e.cancel = true;
-    }
   }
 
   return (
