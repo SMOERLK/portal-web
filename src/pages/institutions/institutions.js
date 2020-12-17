@@ -42,7 +42,7 @@ export default function Institutions(props) {
     else{
       const dataSource = e.component.getDataSource();
       const rowData = dataSource._items.filter((object) => object.id === changes.key)[0];
-      const updatedValues = getUpdatedValues(rowData, changes.data);
+      const updatedValues = getUpdatedValues(changes.data, rowData);
 
       if(validateAdditionalData(updatedValues.additional_data)) {
         setEditedRowUpdatedValues(updatedValues);
@@ -53,24 +53,36 @@ export default function Institutions(props) {
     }
   }
 
-  const getUpdatedValues = (rowData, changes) => {
+  const getUpdatedValues = (changes, rowData) => {
     const updatedValues = {
       id: rowData.id,
-      additional_data: {
-        has_internet_connection: _updateValue(changes.additional_data, rowData.additional_data, 'has_internet_connection'),
-        has_electricity        : _updateValue(changes.additional_data, rowData.additional_data, 'has_electricity'),
-        has_telephone          : _updateValue(changes.additional_data, rowData.additional_data, 'has_telephone'),
-      },
-      tv_channels   : _updateValue(changes, rowData, 'tv_channels') || [],
-      radio_channels: _updateValue(changes, rowData, 'radio_channels') || [],
+      additional_data: _updateAdditionalData(changes, rowData),
+      tv_channels    : _updateValue(changes, rowData, 'tv_channels') || [],
+      radio_channels : _updateValue(changes, rowData, 'radio_channels') || [],
     }
 
     return updatedValues;
   }
 
-  const _updateValue = (newValues, currentValues, key) => {
-    if(newValues.hasOwnProperty(key))     { return newValues[key] }
-    if(currentValues.hasOwnProperty(key)) { return currentValues[key] }
+  const _updateAdditionalData = (changes, rowData) => {
+    const additional_data = [
+      'has_internet_connection',
+      'has_electricity',
+      'has_telephone'
+    ]
+
+    var additionalData = {};
+
+    additional_data.forEach((key) => {
+      additionalData[key] = _updateValue(changes.additional_data, rowData.additional_data, key)
+    })
+
+    return additionalData;
+  }
+
+  const _updateValue = (changes, rowData, key) => {
+    if(changes.hasOwnProperty(key)) { return changes[key] }
+    if(rowData.hasOwnProperty(key)) { return rowData[key] }
     return null;
   }
 

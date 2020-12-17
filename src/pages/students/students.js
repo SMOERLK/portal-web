@@ -13,7 +13,7 @@ export default function Students(props) {
   const { institution_id } = match.params;
   const { institution_name } = location.state;
 
-  const [editedRowOldValues, setEditedRowOldValues] = useState({});
+  const [editedRowUpdatedValues, setEditedRowUpdatedValues] = useState(null);
 
   const store = new CustomStore({
     key: 'student_id',
@@ -22,45 +22,86 @@ export default function Students(props) {
         .then((students) => { return students })
         .catch(() => notify("Internal server error. Failed to fetch data.", 'error', 3000))
     },
-    update: async function(key, values) {
-      var requestData = values;
-      requestData.id = key;
-
-      if(!values.hasOwnProperty('additional_data')) {
-        requestData.additional_data = editedRowOldValues.additional_data;
-      }
-      else {
-        if(!values.additional_data.hasOwnProperty('has_internet_connection')) { requestData.additional_data.has_internet_connection = editedRowOldValues.additional_data.has_internet_connection }
-        if(!values.additional_data.hasOwnProperty('has_electricity'))         { requestData.additional_data.has_electricity = editedRowOldValues.additional_data.has_electricity }
-        if(!values.additional_data.hasOwnProperty('has_telephone'))           { requestData.additional_data.has_telephone = editedRowOldValues.additional_data.has_telephone }
-      }
-
-      if(!values.tv_channels)    { requestData.tv_channels = editedRowOldValues.tv_channels || [] }
-      if(!values.radio_channels) { requestData.radio_channels = editedRowOldValues.radio_channels || [] }
-      
-      setEditedRowOldValues({});
-
-      return setStudent(requestData)
+    update: async function() {
+      return setStudent(editedRowUpdatedValues)
         .then((response) => {
           switch(response.status) {
             case 200: notify("Updated successfully.", 'success', 3000); break;
             case 401: notify("Unauthorized attempt.", 'error', 3000); break;
             default : notify("Update failed.", 'error', 3000);
           }
+          setEditedRowUpdatedValues(null);
         })
         .catch(() => notify("Internal server error. Could not perform update.", 'error', 3000))
     }
   })
 
-  const validateAdditionalData = (additionalDataNew, additionalDataOld) => {
-    const additional_data_new = additionalDataNew || {};
-    const additional_data_old = additionalDataOld || {};
+  const handleOnSaving = (e) => {
+    const changes = e.changes[0];
+
+    if(changes === undefined) {
+      notify("No changes made. Nothing to update.", 'info', 3000);
+    }
+    else{
+      const dataSource = e.component.getDataSource();
+      const rowData = dataSource._items.filter((object) => object.id === changes.key)[0];
+      const updatedValues = getUpdatedValues(rowData, changes.data);
+
+      if(validateAdditionalData(updatedValues.additional_data)) {
+        setEditedRowUpdatedValues(updatedValues);
+      }
+      else {
+        e.cancel = true;
+      }
+    }
+  }
+
+  const getUpdatedValues = (rowData, changes) => {
+    const updatedValues = {
+      id: rowData.id,
+      additional_data: _updateAdditionalData(changes, rowData),
+      tv_channels    : _updateValue(changes, rowData, 'tv_channels') || [],
+      radio_channels : _updateValue(changes, rowData, 'radio_channels') || [],
+    }
+
+    return updatedValues;
+  }
+
+  const _updateAdditionalData = (changes, rowData) => {
+    const additional_data = [
+      'type_of_device',
+      'type_of_device_at_home',
+      'internet_at_home',
+      'internet_device',
+      'connection_type',
+      'electricity_at_home',
+      'tv_at_home',
+      'satellite_tv_at_home'
+    ]
+
+    var additionalData = {};
+
+    additional_data.forEach((key) => {
+      additionalData[key] = _updateValue(changes.additional_data, rowData.additional_data, key)
+    })
+
+    return additionalData;
+  }
+
+  const _updateValue = (changes, rowData, key) => {
+    if(changes.hasOwnProperty(key)) { return changes[key] }
+    if(rowData.hasOwnProperty(key)) { return rowData[key] }
+    return null;
+  }
+
+  const validateAdditionalData = (additional_data) => {
+    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
 
     let requiredColumns = [];
 
-    if(!additional_data_new.hasOwnProperty('has_internet_connection') && !additional_data_old.hasOwnProperty('has_internet_connection')) { requiredColumns.push(' Internet') }
-    if(!additional_data_new.hasOwnProperty('has_electricity')         && !additional_data_old.hasOwnProperty('has_electricity'))         { requiredColumns.push(' Electricity') }
-    if(!additional_data_new.hasOwnProperty('has_telephone')           && !additional_data_old.hasOwnProperty('has_telephone'))           { requiredColumns.push(' Telephone') }
+    if(has_internet_connection === null) { requiredColumns.push(' Internet') }
+    if(has_electricity === null)         { requiredColumns.push(' Electricity') }
+    if(has_telephone === null)           { requiredColumns.push(' Telephone') }
 
     const requiredColumnsLength = requiredColumns.length;
 
@@ -74,27 +115,6 @@ export default function Students(props) {
     }
 
     return true;
-  }
-
-  const handleOnSaving = async (e) => {
-    const changes = e.changes[0];
-
-    if(changes === undefined) {
-      notify("No changes made. Nothing to update.", 'info', 3000);
-    }
-    else{
-      const dataSource = e.component.getDataSource();
-      const editedRowOldValues = dataSource._items.filter((object) => object.id === changes.key)[0];
-
-      setEditedRowOldValues(editedRowOldValues);
-
-      const additional_data_new = changes.data.additional_data;
-      const additional_data_old = editedRowOldValues.additional_data;
-
-      if(!validateAdditionalData(additional_data_new, additional_data_old)) {
-        e.cancel = true;
-      }
-    }
   }
 
   return (
