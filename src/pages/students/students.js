@@ -44,7 +44,7 @@ export default function Students(props) {
     }
     else{
       const dataSource = e.component.getDataSource();
-      const rowData = dataSource._items.filter((object) => object.id === changes.key)[0];
+      const rowData = dataSource._items.filter((object) => object.student_id === changes.key)[0];
       const updatedValues = getUpdatedValues(rowData, changes.data);
 
       if(validateAdditionalData(updatedValues.additional_data)) {
@@ -58,7 +58,7 @@ export default function Students(props) {
 
   const getUpdatedValues = (rowData, changes) => {
     const updatedValues = {
-      id: rowData.id,
+      id: rowData.student_id,
       additional_data: _updateAdditionalData(changes, rowData),
       tv_channels    : _updateValue(changes, rowData, 'tv_channels') || [],
       radio_channels : _updateValue(changes, rowData, 'radio_channels') || [],
@@ -95,13 +95,27 @@ export default function Students(props) {
   }
 
   const validateAdditionalData = (additional_data) => {
-    const { has_internet_connection, has_electricity, has_telephone } = additional_data;
+    const {
+      type_of_device,
+      type_of_device_at_home,
+      internet_at_home,
+      internet_device,
+      connection_type,
+      electricity_at_home,
+      tv_at_home,
+      satellite_tv_at_home
+    } = additional_data;
 
     let requiredColumns = [];
 
-    if(has_internet_connection === null) { requiredColumns.push(' Internet') }
-    if(has_electricity === null)         { requiredColumns.push(' Electricity') }
-    if(has_telephone === null)           { requiredColumns.push(' Telephone') }
+    if(type_of_device === null)         { requiredColumns.push(' Type of Device') }
+    if(type_of_device_at_home === null) { requiredColumns.push(' Type of Device at Home') }
+    if(internet_at_home === null)       { requiredColumns.push(' Internet at Home') }
+    if(internet_device === null)        { requiredColumns.push(' Internet Device') }
+    if(connection_type === null)        { requiredColumns.push(' Connection Type') }
+    if(electricity_at_home === null)    { requiredColumns.push(' Electricity at Home') }
+    if(tv_at_home === null)             { requiredColumns.push(' TV at Home') }
+    if(satellite_tv_at_home === null)   { requiredColumns.push(' Satellite TV at Home') }
 
     const requiredColumnsLength = requiredColumns.length;
 
