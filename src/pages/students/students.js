@@ -6,12 +6,13 @@ import notify from 'devextreme/ui/notify';
 import './students.scss';
 import { getStudents, setStudent } from '../../api/students';
 import { ViewBooleanComponent, EditBooleanComponent, ViewOptionComponent, EditOptionComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
-import { TV_CHANNELS, RADIO_CHANNELS, DEVICES, INTERNET_DEVICES, GRADES } from '../../options';
+import { TV_CHANNELS, RADIO_CHANNELS, DEVICES, INTERNET_DEVICES } from '../../options';
 
 export default function Students(props) {
   const { match, location } = props;
   const { institution_id } = match.params;
   const { institution_name } = location.state;
+  const { classes } = location.state;
 
   const [editedRowUpdatedValues, setEditedRowUpdatedValues] = useState(null);
 
@@ -141,6 +142,7 @@ export default function Students(props) {
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
+        wordWrapEnabled={false}
         onSaving={handleOnSaving}
         onEditCanceled={() => notify("Edit cancelled.", 'info', 2000)}
       >
@@ -155,32 +157,28 @@ export default function Students(props) {
         />
 
         <Column
-          dataField={'student_id'}
-          caption={'ID'}
-          allowEditing={false}
-        />
-        <Column
           dataField={'student_profile.openemis_no'}
           caption={'NSID'}
           allowEditing={false}
         />
         <Column
           dataField={'student_profile.first_name'}
-          caption={'First Name'}
+          caption={'Full Name'}
           allowEditing={false}
         />
         <Column
-          dataField={'student_profile.last_name'}
-          caption={'Last Name'}
+          width={120}
+          caption={'Class'}
+          dataField={'class.institution_class_id'}
+          calculateCellValue={(rowData) => { return rowData.class && rowData.class.institution_class_id}}
           allowEditing={false}
-        />
-        <Column
-          dataField={'education_grade_id'}
-          caption={'Grade'}
-          calculateCellValue={(rowData) => { return rowData.education_grade_id && GRADES[rowData.education_grade_id] }}
-          allowEditing={false}
-          hidingPriority={2}
-        />
+        >
+          <Lookup
+            dataSource={(classes || []).map(data => { return { id: data.id, name: data.name } })}
+            valueExpr="id"
+            displayExpr="name"
+          />
+        </Column>
         <Column
           dataField={'student_profile.address'}
           caption={'Address'}

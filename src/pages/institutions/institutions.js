@@ -248,7 +248,7 @@ export default function Institutions(props) {
                 stylingMode="contained"
                 onClick={() => props.history.push({
                   pathname: '/students?institution_id=' + row.data.id,
-                  state: { institution_name: row.data.name }
+                  state: { institution_name: row.data.name , classes :row.data.classes }
                 })}
               />
             )
