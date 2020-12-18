@@ -290,7 +290,7 @@ export default function Students(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
-          hidingPriority={3}
+          hidingPriority={13}
           allowFiltering={false}
         >
           <Lookup
@@ -307,7 +307,7 @@ export default function Students(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
-          hidingPriority={4}
+          hidingPriority={12}
           allowFiltering={false}
         >
           <Lookup
@@ -316,6 +316,69 @@ export default function Students(props) {
             displayExpr="name"
           />
         </Column>
+
+        <Column
+          caption={"Mother's Name"}
+          dataField={'mother.profile.first_name'}
+          allowEditing={false}
+          hidingPriority={11}
+        />
+
+        <Column
+          caption={"Mother's NIC"}
+          dataField={'mother.profile.nationality_id'}
+          allowEditing={false}
+          hidingPriority={10}
+        />
+
+        <Column
+          caption={"Mother's Address"}
+          dataField={'mother.profile.address'}
+          allowEditing={false}
+          hidingPriority={9}
+        />
+
+        <Column
+          caption={"Father's Name"}
+          dataField={'father.profile.first_name'}
+          allowEditing={false}
+          hidingPriority={8}
+        />
+
+        <Column
+          caption={"Father's NIC"}
+          dataField={'father.profile.nationality_id'}
+          allowEditing={false}
+          hidingPriority={7}
+        />
+
+        <Column
+          caption={"Father's Address"}
+          dataField={'father.profile.address'}
+          allowEditing={false}
+          hidingPriority={6}
+        />
+
+        <Column
+          caption={"Guardian's Name"}
+          dataField={'guardian.profile.first_name'}
+          allowEditing={false}
+          hidingPriority={5}
+        />
+
+        <Column
+          caption={"Guardian's NIC"}
+          dataField={'guardian.profile.nationality_id'}
+          allowEditing={false}
+          hidingPriority={4}
+        />
+
+        <Column
+          caption={"Guardian's Address"}
+          dataField={'guardian.profile.address'}
+          allowEditing={false}
+          hidingPriority={3}
+        />
 
       </DataGrid>
     </React.Fragment>
