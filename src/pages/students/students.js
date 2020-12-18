@@ -161,11 +161,13 @@ export default function Students(props) {
           caption={'NSID'}
           allowEditing={false}
         />
+
         <Column
           dataField={'student_profile.first_name'}
           caption={'Full Name'}
           allowEditing={false}
         />
+
         <Column
           width={120}
           caption={'Class'}
@@ -179,10 +181,12 @@ export default function Students(props) {
             displayExpr="name"
           />
         </Column>
+
         <Column
           dataField={'student_profile.address'}
           caption={'Address'}
           allowEditing={false}
+          allowFiltering={false}
           hidingPriority={1}
         />
 
@@ -192,6 +196,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.type_of_device }}
           cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && DEVICES[row.data.additional_data.type_of_device]} /> }}
           editCellComponent={EditOptionComponent}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(DEVICES).map(data => { return { id: data[0], name: data[1] }})}
@@ -206,6 +211,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.type_of_device_at_home }}
           cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && DEVICES[row.data.additional_data.type_of_device_at_home]} /> }}
           editCellComponent={EditOptionComponent}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(DEVICES).map(data => { return { id: data[0], name: data[1] }})}
@@ -221,6 +227,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.internet_at_home ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.internet_at_home}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -231,6 +238,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.internet_device }}
           cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && INTERNET_DEVICES[row.data.additional_data.internet_device]} /> }}
           editCellComponent={EditOptionComponent}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(INTERNET_DEVICES).map(data => { return { id: data[0], name: data[1] }})}
@@ -246,6 +254,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.electricity_at_home ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.electricity_at_home}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -257,6 +266,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.tv_at_home ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.tv_at_home}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -268,6 +278,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.satellite_tv_at_home ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.satellite_tv_at_home}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -280,6 +291,7 @@ export default function Students(props) {
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
           hidingPriority={3}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
@@ -296,6 +308,7 @@ export default function Students(props) {
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
           hidingPriority={4}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}

@@ -139,40 +139,51 @@ export default function Institutions(props) {
           caption={'Census ID'}
           allowEditing={false}
         />
+
         <Column
           dataField={'name'}
           caption={'Name'}
           allowEditing={false}
         />
+
         <Column
           dataField={'address'}
           caption={'Address'}
           allowEditing={false}
+          allowFiltering={false}
           hidingPriority={5}
         />
+
         <Column
           dataField={'postal_code'}
           caption={'Postal Code'}
           hidingPriority={3}
           allowEditing={false}
+          allowFiltering={false}
         />
+
         <Column
           dataField={'contact_person'}
           caption={'Contact Person'}
           hidingPriority={4}
           allowEditing={false}
+          allowFiltering={false}
         />
+
         <Column
           dataField={'fax'}
           caption={'Fax'}
           hidingPriority={1}
           allowEditing={false}
+          allowFiltering={false}
         />
+
         <Column
           dataField={'email'}
           caption={'Email'}
           hidingPriority={2}
           allowEditing={false}
+          allowFiltering={false}
         />
 
         <Column
@@ -182,6 +193,7 @@ export default function Institutions(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_internet_connection ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.has_internet_connection}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -193,6 +205,7 @@ export default function Institutions(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_electricity ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.has_electricity}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -204,6 +217,7 @@ export default function Institutions(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.has_telephone ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.has_telephone}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -215,6 +229,7 @@ export default function Institutions(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
@@ -230,6 +245,7 @@ export default function Institutions(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
@@ -254,6 +270,7 @@ export default function Institutions(props) {
             )
           }}
           allowEditing={false}
+          allowFiltering={false}
         />
 
       </DataGrid>
