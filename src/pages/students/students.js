@@ -6,7 +6,7 @@ import notify from 'devextreme/ui/notify';
 import './students.scss';
 import { getStudents, setStudent } from '../../api/students';
 import { ViewBooleanComponent, EditBooleanComponent, ViewOptionComponent, EditOptionComponent, ViewChannelsComponent, EditChannelsComponent } from '../../components';
-import { TV_CHANNELS, RADIO_CHANNELS, DEVICES, INTERNET_DEVICES, GRADES } from '../../options';
+import { TV_CHANNELS, RADIO_CHANNELS, DEVICES, INTERNET_DEVICES } from '../../options';
 
 export default function Students(props) {
   const { match, location } = props;
@@ -142,6 +142,7 @@ export default function Students(props) {
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
+        wordWrapEnabled={false}
         onSaving={handleOnSaving}
         onEditCanceled={() => notify("Edit cancelled.", 'info', 2000)}
       >
@@ -156,40 +157,36 @@ export default function Students(props) {
         />
 
         <Column
-          dataField={'student_id'}
-          caption={'ID'}
-          allowEditing={false}
-        />
-        <Column
           dataField={'student_profile.openemis_no'}
           caption={'NSID'}
           allowEditing={false}
         />
+
         <Column
           dataField={'student_profile.first_name'}
-          caption={'First Name'}
+          caption={'Full Name'}
           allowEditing={false}
         />
+
         <Column
-          dataField={'student_profile.last_name'}
-          caption={'Last Name'}
-          allowEditing={false}
-        />
-        <Column
+          width={120}
           caption={'Class'}
           dataField={'class.institution_class_id'}
-          calculateCellValue={(rowData) => { return rowData.class.institution_class_id}}
+          calculateCellValue={(rowData) => { return rowData.class && rowData.class.institution_class_id}}
+          allowEditing={false}
         >
           <Lookup
-            dataSource={(classes).map(data => {return data} )}
+            dataSource={(classes || []).map(data => { return { id: data.id, name: data.name } })}
             valueExpr="id"
             displayExpr="name"
           />
         </Column>
+
         <Column
           dataField={'student_profile.address'}
           caption={'Address'}
           allowEditing={false}
+          allowFiltering={false}
           hidingPriority={1}
         />
 
@@ -199,6 +196,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.type_of_device }}
           cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && DEVICES[row.data.additional_data.type_of_device]} /> }}
           editCellComponent={EditOptionComponent}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(DEVICES).map(data => { return { id: data[0], name: data[1] }})}
@@ -213,6 +211,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.type_of_device_at_home }}
           cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && DEVICES[row.data.additional_data.type_of_device_at_home]} /> }}
           editCellComponent={EditOptionComponent}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(DEVICES).map(data => { return { id: data[0], name: data[1] }})}
@@ -228,6 +227,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.internet_at_home ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.internet_at_home}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -238,6 +238,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data && rowData.additional_data.internet_device }}
           cellRender={(row) => { return <ViewOptionComponent value={row.data.additional_data && INTERNET_DEVICES[row.data.additional_data.internet_device]} /> }}
           editCellComponent={EditOptionComponent}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(INTERNET_DEVICES).map(data => { return { id: data[0], name: data[1] }})}
@@ -253,6 +254,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.electricity_at_home ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.electricity_at_home}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -264,6 +266,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.tv_at_home ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.tv_at_home}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -275,6 +278,7 @@ export default function Students(props) {
           calculateCellValue={(rowData) => { return rowData.additional_data ? rowData.additional_data.satellite_tv_at_home ? 'Yes' : 'No' : null}}
           cellRender={(row) => { return <ViewBooleanComponent value={row.data.additional_data && row.data.additional_data.satellite_tv_at_home}/> }}
           editCellComponent={EditBooleanComponent}
+          allowFiltering={false}
         >
           <Lookup dataSource={['Yes', 'No']} />
         </Column>
@@ -286,7 +290,8 @@ export default function Students(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
-          hidingPriority={3}
+          hidingPriority={13}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
@@ -302,7 +307,8 @@ export default function Students(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
-          hidingPriority={4}
+          hidingPriority={12}
+          allowFiltering={false}
         >
           <Lookup
             dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
@@ -310,6 +316,69 @@ export default function Students(props) {
             displayExpr="name"
           />
         </Column>
+
+        <Column
+          caption={"Mother's Name"}
+          dataField={'mother.profile.first_name'}
+          allowEditing={false}
+          hidingPriority={11}
+        />
+
+        <Column
+          caption={"Mother's NIC"}
+          dataField={'mother.profile.nationality_id'}
+          allowEditing={false}
+          hidingPriority={10}
+        />
+
+        <Column
+          caption={"Mother's Address"}
+          dataField={'mother.profile.address'}
+          allowEditing={false}
+          hidingPriority={9}
+        />
+
+        <Column
+          caption={"Father's Name"}
+          dataField={'father.profile.first_name'}
+          allowEditing={false}
+          hidingPriority={8}
+        />
+
+        <Column
+          caption={"Father's NIC"}
+          dataField={'father.profile.nationality_id'}
+          allowEditing={false}
+          hidingPriority={7}
+        />
+
+        <Column
+          caption={"Father's Address"}
+          dataField={'father.profile.address'}
+          allowEditing={false}
+          hidingPriority={6}
+        />
+
+        <Column
+          caption={"Guardian's Name"}
+          dataField={'guardian.profile.first_name'}
+          allowEditing={false}
+          hidingPriority={5}
+        />
+
+        <Column
+          caption={"Guardian's NIC"}
+          dataField={'guardian.profile.nationality_id'}
+          allowEditing={false}
+          hidingPriority={4}
+        />
+
+        <Column
+          caption={"Guardian's Address"}
+          dataField={'guardian.profile.address'}
+          allowEditing={false}
+          hidingPriority={3}
+        />
 
       </DataGrid>
     </React.Fragment>
