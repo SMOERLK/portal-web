@@ -135,11 +135,6 @@ export default function Institutions(props) {
         />
 
         <Column
-          dataField={'id'}
-          caption={'ID'}
-          allowEditing={false}
-        />
-        <Column
           dataField={'code'}
           caption={'Census ID'}
           allowEditing={false}
@@ -153,6 +148,7 @@ export default function Institutions(props) {
           dataField={'address'}
           caption={'Address'}
           allowEditing={false}
+          hidingPriority={5}
         />
         <Column
           dataField={'postal_code'}
@@ -219,7 +215,6 @@ export default function Institutions(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={TV_CHANNELS} channels={row.data.tv_channels}/> }}
           editCellComponent={EditChannelsComponent}
-          hidingPriority={6}
         >
           <Lookup
             dataSource={Object.entries(TV_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
@@ -235,7 +230,6 @@ export default function Institutions(props) {
           filterOperations={['contains']}
           cellRender={(row) => { return <ViewChannelsComponent data={RADIO_CHANNELS} channels={row.data.radio_channels}/> }}
           editCellComponent={EditChannelsComponent}
-          hidingPriority={5}
         >
           <Lookup
             dataSource={Object.entries(RADIO_CHANNELS).map(data => { return { id: data[0], name: data[1] }})}
